@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Estatísticas do Personagem</title>
+    <style>
+        body {
+            background: #f8f9fa;
+            color: #1976d2;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 32px 0 18px 0;
+            padding: 0 32px;
+            position: relative;
+            z-index: 10;
+        }
+        .fichas-title {
+            font-size: 2.1rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            color: #fff;
+            text-shadow: 1px 1px 8px #1976d299;
+        }
+        .header-logo {
+            height: 44px;
+            width: auto;
+        }
+        .home-btn {
+            background: #fff !important;
+            border: none;
+            cursor: pointer;
+            margin-left: 12px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px #1976d222;
+            transition: background 0.18s;
+            width: 38px;
+            height: 38px;
+        }
+        .home-btn img {
+            width: 22px;
+            height: 22px;
+        }
+        .home-btn:hover {
+            background: #e3f2fd !important;
+        }
+        .estatisticas-outer-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            margin-right: 0;
+            margin-top: 18px;
+            width: 100%;
+        }
+        .estatisticas-container {
+            background: rgba(255,255,255,0.97);
+            border-radius: 18px;
+            box-shadow: 0 4px 24px #1976d222;
+            padding: 32px 32px 32px 28px;
+            min-width: 340px;
+            max-width: 680px;
+            width: 96vw;
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+            border-left: 6px solid #1976d2;
+            margin: 0 auto;
+        }
+        .estatistica-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 6px;
+            justify-content: flex-start;
+            flex-wrap: wrap;
+        }
+        .estatistica-label {
+            font-size: 1.08rem;
+            font-weight: bold;
+            min-width: 120px;
+            color: #1976d2;
+            text-align: left;
+        }
+        .estatistica-input {
+            width: 56px;
+            padding: 6px 8px;
+            border-radius: 7px;
+            border: 1.5px solid #1976d2;
+            font-size: 1.05rem;
+            background: #e3f2fd;
+            color: #1976d2;
+            text-align: right;
+        }
+        .estatistica-btn {
+            background: #fff;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+            padding: 3px 6px;
+            margin-left: 2px;
+            transition: background 0.18s;
+            box-shadow: 0 2px 8px #1976d222;
+            display: flex;
+            align-items: center;
+        }
+        .estatistica-btn img {
+            width: 20px;
+            height: 20px;
+        }
+        .buff-tag, .debuff-tag, .prioridade-tag {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 12px;
+            padding: 2px 8px;
+            margin-left: 5px;
+            font-size: 0.97rem;
+            font-weight: 600;
+            color: #fff;
+            position: relative;
+            gap: 5px;
+        }
+        .buff-tag {
+            background: #2196f3;
+            border: 2px solid #1976d2;
+        }
+        .debuff-tag {
+            background: #1976d2;
+            border: 2px solid #1565c0;
+        }
+        .prioridade-tag {
+            background: linear-gradient(90deg, #ffd700 60%, #bfa100 100%);
+            border: 2px solid #ffd700;
+            color: #1976d2;
+            font-weight: bold;
+        }
+        .remove-tag-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-weight: bold;
+            margin-left: 2px;
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 0 3px;
+            border-radius: 50%;
+            transition: background 0.15s;
+            line-height: 1;
+        }
+        .remove-tag-btn:hover {
+            background: #fff3;
+        }
+        .remove-all-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin-left: 7px;
+            padding: 2px 5px;
+            border-radius: 7px;
+            transition: background 0.18s;
+            display: flex;
+            align-items: center;
+        }
+        .remove-all-btn img {
+            width: 16px;
+            height: 16px;
+        }
+        .resultado-tag {
+            background: #e3f2fd;
+            color: #1976d2;
+            border-radius: 10px;
+            padding: 2px 10px;
+            margin-left: 7px;
+            font-weight: bold;
+            border: 1.2px solid #1976d2;
+            font-size: 1.01rem;
+            min-width: 44px;
+            text-align: center;
+            display: inline-block;
+        }
+        .extra-result {
+            background: #fff;
+            color: #1976d2;
+            border-radius: 10px;
+            padding: 2px 10px;
+            margin-left: 7px;
+            font-weight: 500;
+            border: 1.2px solid #90caf9;
+            font-size: 0.97rem;
+            min-width: 44px;
+            text-align: center;
+            display: inline-block;
+            box-shadow: 0 1px 4px #1976d211;
+        }
+        /* Pop-up */
+        .popup-bg {
+            position: fixed;
+            top:0; left:0; width:100vw; height:100vh;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .popup {
+            background: #fff;
+            padding: 28px 22px;
+            border-radius: 14px;
+            box-shadow: 0 4px 24px #1976d233;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            min-width: 260px;
+            color: #1976d2;
+        }
+        .popup label { font-weight: bold; }
+        .popup input[type="number"] {
+            padding: 7px;
+            border-radius: 6px;
+            border: 1.2px solid #1976d2;
+            font-size: 1rem;
+            width: 80px;
+            color: #1976d2;
+            background: #e3f2fd;
+        }
+        .popup-btns {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+        .popup-btn {
+            padding: 7px 14px;
+            border-radius: 6px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.97rem;
+        }
+        .popup-btn.buff {
+            background: #2196f3;
+            color: #fff;
+        }
+        .popup-btn.debuff {
+            background: #1976d2;
+            color: #fff;
+        }
+        .popup-btn.prioridade {
+            background: linear-gradient(90deg, #ffd700 60%, #bfa100 100%);
+            color: #1976d2;
+            border: 1.2px solid #ffd700;
+        }
+        .popup-btn.cancelar {
+            background: #e3f2fd;
+            color: #1976d2;
+            border: 1.2px solid #1976d2;
+        }
+        .popup .msg { color: #1976d2; font-size: 0.98rem;}
+        @media (max-width: 800px) {
+            .estatisticas-container { max-width: 99vw; min-width: unset; padding: 18px 2vw 18px 2vw;}
+            .header { padding: 0 8px;}
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="fichas-title">
+            Estatísticas
+        </div>
+        <div style="display:flex;align-items:center;">
+            <button class="home-btn" onclick="voltarPersonagem()" title="Voltar para a ficha">
+                <img src="../imagens/home.png" alt="Home">
+            </button>
+            <img src="../imagens/logo.png" alt="Logo" class="header-logo">
+        </div>
+    </div>
+    <div class="estatisticas-outer-container">
+        <div class="estatisticas-container" id="estatisticasContainer"></div>
+    </div>
+
+    <!-- Pop-up -->
+    <div id="popupBg" class="popup-bg" style="display:none;">
+        <div class="popup">
+            <label for="valorBuff">Valor (%)</label>
+            <input type="number" id="valorBuff" min="1" max="999">
+            <div class="msg" id="popupMsg"></div>
+            <div class="popup-btns">
+                <button class="popup-btn buff" onclick="aplicarBuffDebuff('buff')">Buff</button>
+                <button class="popup-btn debuff" onclick="aplicarBuffDebuff('debuff')">Debuff</button>
+                <button class="popup-btn prioridade" onclick="aplicarBuffDebuff('prioridade')">Prioridade</button>
+                <button class="popup-btn cancelar" onclick="fecharPopup()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botão menu lateral -->
+    <button class="menu-btn" id="menuBtn" title="Menu" style="position:fixed;bottom:32px;left:32px;width:54px;height:54px;background:#fff;border-radius:50%;border:none;box-shadow:0 4px 18px #1976d222;display:flex;align-items:center;justify-content:center;z-index:200;">
+        <img src="../imagens/menu.png" alt="Menu" style="width:30px;height:30px;">
+    </button>
+    <div class="menu-sidebar" id="menuSidebar" style="position:fixed;bottom:32px;left:32px;transform:translateX(-120%);transition:transform 0.4s cubic-bezier(.68,-0.55,.27,1.55);background:#fff;border-radius:40px 18px 18px 40px;box-shadow:0 4px 24px #1976d222;padding:28px 24px 28px 80px;display:flex;flex-direction:column;gap:22px;min-width:220px;z-index:199;">
+        <div class="menu-item" onclick="irPara('estatisticas')" style="display:flex;align-items:center;gap:16px;background:rgba(25,118,210,0.07);border-radius:12px;padding:10px 18px;color:#1976d2;font-size:1.13rem;font-weight:500;cursor:pointer;border:none;outline:none;transition:background 0.18s;">
+            <img src="../imagens/est.png" alt="Estatísticas" style="width:28px;height:28px;"> Estatísticas
+        </div>
+        <div class="menu-item" onclick="irPara('skills')" style="display:flex;align-items:center;gap:16px;background:rgba(25,118,210,0.07);border-radius:12px;padding:10px 18px;color:#1976d2;font-size:1.13rem;font-weight:500;cursor:pointer;border:none;outline:none;transition:background 0.18s;">
+            <img src="../imagens/skill.png" alt="Skills" style="width:28px;height:28px;"> Skills
+        </div>
+        <div class="menu-item" onclick="irPara('inventario')" style="display:flex;align-items:center;gap:16px;background:rgba(25,118,210,0.07);border-radius:12px;padding:10px 18px;color:#1976d2;font-size:1.13rem;font-weight:500;cursor:pointer;border:none;outline:none;transition:background 0.18s;">
+            <img src="../imagens/inv.png" alt="Inventário" style="width:28px;height:28px;"> Inventário
+        </div>
+        <div class="menu-item" onclick="irPara('combate')" style="display:flex;align-items:center;gap:16px;background:rgba(25,118,210,0.07);border-radius:12px;padding:10px 18px;color:#1976d2;font-size:1.13rem;font-weight:500;cursor:pointer;border:none;outline:none;transition:background 0.18s;">
+            <img src="../imagens/Combate.png" alt="Combate" style="width:28px;height:28px;"> Combate
+        </div>
+        <div class="menu-item" onclick="irPara('calculadora')" style="display:flex;align-items:center;gap:16px;background:rgba(25,118,210,0.07);border-radius:12px;padding:10px 18px;color:#1976d2;font-size:1.13rem;font-weight:500;cursor:pointer;border:none;outline:none;transition:background 0.18s;">
+            <img src="../imagens/Calc.png" alt="Calculadora" style="width:28px;height:28px;"> Calculadora
+        </div>
+    </div>
+    <script>
+        // --- Menu lateral reutilizável ---
+        const menuBtn = document.getElementById('menuBtn');
+        const menuSidebar = document.getElementById('menuSidebar');
+        let menuAberto = false;
+        if (menuBtn && menuSidebar) {
+            menuBtn.addEventListener('click', function() {
+                menuAberto = !menuAberto;
+                menuSidebar.style.transform = menuAberto ? 'translateX(0)' : 'translateX(-120%)';
+                menuBtn.classList.add('girando');
+                setTimeout(() => menuBtn.classList.remove('girando'), 400);
+            });
+            document.addEventListener('click', function(e) {
+                if (
+                    menuAberto &&
+                    !menuSidebar.contains(e.target) &&
+                    !menuBtn.contains(e.target)
+                ) {
+                    menuSidebar.style.transform = 'translateX(-120%)';
+                    menuAberto = false;
+                }
+            });
+        }
+        function irPara(destino) {
+            const url = new URL(window.location.href);
+            const idx = url.searchParams.get('ficha');
+            let rota = '';
+            switch(destino) {
+                case 'estatisticas': rota = `estatisticas.html?ficha=${idx}`; break;
+                case 'skills': rota = `skills.html?ficha=${idx}`; break;
+                case 'inventario': rota = `inventario.html?ficha=${idx}`; break;
+                case 'combate': rota = `combate.html?ficha=${idx}`; break;
+                case 'calculadora': rota = `calculadora.html?ficha=${idx}`; break;
+                default: return;
+            }
+            window.location.href = rota;
+        }
+        function voltarPersonagem() {
+            const url = new URL(window.location.href);
+            const idx = url.searchParams.get('ficha');
+            window.location.href = `Ficha/Personagem.html?ficha=${idx}`;
+        }
+
+        // --- Estatísticas e lógica de buffs/debuffs ---
+        const ESTATS = [
+            { key: 'atk', label: 'Ataque (Atk)' },
+            { key: 'atkEsp', label: 'Ataque Especial (Atk Esp)' },
+            { key: 'def', label: 'Defesa (Def)' },
+            { key: 'defEsp', label: 'Defesa Especial (Defesa Esp.)' },
+            { key: 'vel', label: 'Velocidade (Vel)' }
+        ];
+
+        function getQueryParam(nome) {
+            const url = new URL(window.location.href);
+            return url.searchParams.get(nome);
+        }
+        function getUsuarioLogado() {
+            return localStorage.getItem('usuarioLogado');
+        }
+        function getFichasUsuario() {
+            const usuario = getUsuarioLogado();
+            if (!usuario) return [];
+            let fichas = JSON.parse(localStorage.getItem('fichas_' + usuario) || '[]');
+            return fichas;
+        }
+        function setFichasUsuario(fichas) {
+            const usuario = getUsuarioLogado();
+            if (!usuario) return;
+            localStorage.setItem('fichas_' + usuario, JSON.stringify(fichas));
+        }
+
+        let idxFicha = null;
+        let ficha = null;
+
+        function renderEstatisticas() {
+            const container = document.getElementById('estatisticasContainer');
+            container.innerHTML = '';
+            ESTATS.forEach(est => {
+                const valorBase = parseInt(ficha[est.key]?.base) || 0;
+                const buffs = (ficha[est.key]?.buffs || []).slice();
+                const debuffs = (ficha[est.key]?.debuffs || []).slice();
+                const prioridades = (ficha[est.key]?.prioridades || []).slice();
+
+                // Ordenação: prioridades primeiro, depois buffs decrescente, debuffs crescente
+                let buffsNormais = buffs.filter((_, i) => !prioridades.includes(i));
+                let buffsPrioridade = buffs.filter((_, i) => prioridades.includes(i));
+                buffsPrioridade.sort((a, b) => b - a);
+                buffsNormais.sort((a, b) => b - a);
+
+                let debuffsNormais = debuffs.filter((_, i) => !prioridades.includes(1000 + i));
+                let debuffsPrioridade = debuffs.filter((_, i) => prioridades.includes(1000 + i));
+                debuffsPrioridade.sort((a, b) => a - b);
+                debuffsNormais.sort((a, b) => a - b);
+
+                // Aplicação dos buffs e debuffs
+                let valor = valorBase;
+                let tags = '';
+                // Buffs prioridade
+                buffsPrioridade.forEach((buff, idx) => {
+                    tags += `<span class="prioridade-tag">+${buff}%<button class="remove-tag-btn" title="Remover buff" onclick="removerBuffDebuff('${est.key}', 'buff', ${prioridades[idx]}, event)">×</button></span>`;
+                });
+                // Buffs normais
+                buffsNormais.forEach((buff, i) => {
+                    let realIdx = buffs.findIndex((b, idx) => b === buff && !prioridades.includes(idx));
+                    tags += `<span class="buff-tag">+${buff}%<button class="remove-tag-btn" title="Remover buff" onclick="removerBuffDebuff('${est.key}', 'buff', ${realIdx}, event)">×</button></span>`;
+                });
+                // Debuffs prioridade
+                debuffsPrioridade.forEach((debuff, idx) => {
+                    tags += `<span class="prioridade-tag">-${debuff}%<button class="remove-tag-btn" title="Remover debuff" onclick="removerBuffDebuff('${est.key}', 'debuff', ${prioridades[idx + buffsPrioridade.length]}-1000, event)">×</button></span>`;
+                });
+                // Debuffs normais
+                debuffsNormais.forEach((debuff, i) => {
+                    let realIdx = debuffs.findIndex((d, idx) => d === debuff && !prioridades.includes(1000 + idx));
+                    tags += `<span class="debuff-tag">-${debuff}%<button class="remove-tag-btn" title="Remover debuff" onclick="removerBuffDebuff('${est.key}', 'debuff', ${realIdx}, event)">×</button></span>`;
+                });
+
+                // Aplicar buffs e debuffs (prioridade primeiro)
+                buffsPrioridade.forEach(buff => {
+                    valor = Math.floor(valor + valor * (buff / 100));
+                });
+                buffsNormais.forEach(buff => {
+                    valor = Math.floor(valor + valor * (buff / 100));
+                });
+                debuffsPrioridade.forEach(debuff => {
+                    valor = Math.floor(valor - valor * (debuff / 100));
+                });
+                debuffsNormais.forEach(debuff => {
+                    valor = Math.floor(valor - valor * (debuff / 100));
+                });
+
+                // Cálculos extras
+                let extra = '';
+                if (est.key === 'def') {
+                    // Defesa: 1 a cada 50 pontos
+                    let dr = Math.floor(valor / 50);
+                    extra = `<span class="extra-result">Dano Reduzido: ${dr}</span>`;
+                }
+                if (est.key === 'defEsp') {
+                    // Defesa Especial: 1 a cada 75 pontos
+                    let dr = Math.floor(valor / 75);
+                    extra = `<span class="extra-result">Dano Reduzido: ${dr}</span>`;
+                }
+                if (est.key === 'vel') {
+                    // Velocidade: (valor / 100) + 6
+                    let desloc = Math.floor(valor / 100) + 6;
+                    extra = `<span class="extra-result">Deslocação: ${desloc}/m</span>`;
+                }
+
+                container.innerHTML += `
+                    <div class="estatistica-row" data-key="${est.key}">
+                        <span class="estatistica-label">${est.label}</span>
+                        <input class="estatistica-input" type="number" min="0" value="${valorBase}" onchange="atualizarBase('${est.key}', this.value)">
+                        <button class="estatistica-btn" onclick="abrirPopup('${est.key}')">
+                            <img src="../imagens/edit.png" alt="Editar">
+                        </button>
+                        ${tags}
+                        <span class="resultado-tag">${valor}</span>
+                        ${extra}
+                        <button class="remove-all-btn" title="Remover todos os buffs/debuffs" onclick="removerTodos('${est.key}')">
+                            <img src="../imagens/trash.png" alt="Remover todos">
+                        </button>
+                    </div>
+                `;
+            });
+        }
+
+        function atualizarBase(key, value) {
+            value = Math.floor(Number(value) || 0);
+            ficha[key] = ficha[key] || { base: 0, buffs: [], debuffs: [], prioridades: [] };
+            ficha[key].base = value;
+            salvarFicha();
+            renderEstatisticas();
+        }
+
+        // --- Remover buff/debuff individual ---
+        function removerBuffDebuff(key, tipo, idx, event) {
+            event.stopPropagation();
+            ficha[key] = ficha[key] || { base: 0, buffs: [], debuffs: [], prioridades: [] };
+            if (tipo === 'buff') {
+                if (ficha[key].prioridades && ficha[key].prioridades.includes(Number(idx))) {
+                    ficha[key].prioridades = ficha[key].prioridades.filter(p => p !== Number(idx));
+                }
+                ficha[key].buffs.splice(idx, 1);
+            } else {
+                let realIdx = Number(idx);
+                if (realIdx < 0) realIdx = 0;
+                if (ficha[key].prioridades && ficha[key].prioridades.includes(1000 + realIdx)) {
+                    ficha[key].prioridades = ficha[key].prioridades.filter(p => p !== (1000 + realIdx));
+                }
+                ficha[key].debuffs.splice(realIdx, 1);
+            }
+            salvarFicha();
+            renderEstatisticas();
+        }
+
+        // --- Remover todos os buffs/debuffs ---
+        function removerTodos(key) {
+            ficha[key] = ficha[key] || { base: 0, buffs: [], debuffs: [], prioridades: [] };
+            ficha[key].buffs = [];
+            ficha[key].debuffs = [];
+            ficha[key].prioridades = [];
+            salvarFicha();
+            renderEstatisticas();
+        }
+
+        // --- Pop-up ---
+        let estatisticaSelecionada = null;
+        function abrirPopup(key) {
+            estatisticaSelecionada = key;
+            document.getElementById('valorBuff').value = '';
+            document.getElementById('popupMsg').textContent = '';
+            document.getElementById('popupBg').style.display = 'flex';
+        }
+        function fecharPopup() {
+            document.getElementById('popupBg').style.display = 'none';
+        }
+        function aplicarBuffDebuff(tipo) {
+            const valor = Math.floor(Number(document.getElementById('valorBuff').value));
+            if (!valor || valor < 1) {
+                document.getElementById('popupMsg').textContent = 'Insira um valor válido (mínimo 1).';
+                return;
+            }
+            if (!estatisticaSelecionada) return;
+            ficha[estatisticaSelecionada] = ficha[estatisticaSelecionada] || { base: 0, buffs: [], debuffs: [], prioridades: [] };
+            if (tipo === 'buff') {
+                ficha[estatisticaSelecionada].buffs.push(valor);
+            } else if (tipo === 'debuff') {
+                ficha[estatisticaSelecionada].debuffs.push(valor);
+            } else if (tipo === 'prioridade') {
+                if (document.activeElement && document.activeElement.classList.contains('popup-btn')) {
+                    let isBuff = confirm('Priorizar como Buff? (Cancelar = Debuff)');
+                    if (isBuff) {
+                        ficha[estatisticaSelecionada].buffs.push(valor);
+                        let idx = ficha[estatisticaSelecionada].buffs.length - 1;
+                        ficha[estatisticaSelecionada].prioridades.push(idx);
+                    } else {
+                        ficha[estatisticaSelecionada].debuffs.push(valor);
+                        let idx = ficha[estatisticaSelecionada].debuffs.length - 1;
+                        ficha[estatisticaSelecionada].prioridades.push(1000 + idx);
+                    }
+                }
+            }
+            salvarFicha();
+            fecharPopup();
+            renderEstatisticas();
+        }
+
+        function salvarFicha() {
+            const fichas = getFichasUsuario();
+            if (isNaN(idxFicha) || !fichas[idxFicha]) return;
+            fichas[idxFicha] = ficha;
+            setFichasUsuario(fichas);
+        }
+
+        // --- Inicialização ---
+        window.onload = function() {
+            if (!getUsuarioLogado()) {
+                window.location.href = '../Registro/login.html';
+                return;
+            }
+            idxFicha = parseInt(getQueryParam('ficha'));
+            const fichas = getFichasUsuario();
+            if (isNaN(idxFicha) || !fichas[idxFicha]) {
+                document.getElementById('estatisticasContainer').innerHTML = '<span style="color:#e53935;">Ficha não encontrada.</span>';
+                return;
+            }
+            ficha = fichas[idxFicha];
+            // Inicializa campos se não existirem
+            ESTATS.forEach(est => {
+                if (!ficha[est.key]) ficha[est.key] = { base: 0, buffs: [], debuffs: [] };
+            });
+            renderEstatisticas();
+        }
+    </script>
+</body>
+</html>

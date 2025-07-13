@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<script src="../js/storage.js"></script>
+<script src="../js/ficha_pagina.js"></script>
+    <meta charset="UTF-8">
+    <title>Página Inicial - A Rachadura RPG</title>
+    <style>
+        body {
+            background: url('../imagens/fundo_2.png') no-repeat center center fixed;
+            background-size: cover;
+            color: #f5f5f5;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            display: block;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 40px 60px 20px 60px;
+        }
+        .fichas-title {
+            font-size: 2.2rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+        .contador {
+            background: rgba(60,0,80,0.3);
+            border-radius: 8px;
+            padding: 6px 18px;
+            font-size: 1.1rem;
+            opacity: 0.7;
+            margin-left: 10px;
+        }
+        .btn-criar {
+            background: url('../imagens/buttom.png') no-repeat center center;
+            background-size: contain;
+            width: 120px;
+            height: 48px;
+            border: none;
+            cursor: pointer;
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-shadow: 1px 1px 4px #000;
+            transition: filter 0.2s;
+        }
+        .btn-criar:active { filter: brightness(0.8);}
+        .lista-fichas {
+            margin: 0 60px;
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .ficha-item {
+            background: linear-gradient(90deg, #3a2067 60%, #4e2a8e 100%);
+            border-radius: 14px;
+            padding: 14px 22px;
+            box-shadow: 0 2px 12px #0007;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            font-size: 1.05rem;
+            border-left: 5px solid #a259ff;
+            transition: box-shadow 0.2s;
+        }
+        .ficha-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .ficha-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .ficha-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 6px;
+            transition: background 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .ficha-btn:hover {
+            background: rgba(162,89,255,0.13);
+        }
+        .ficha-btn img {
+            width: 26px;
+            height: 26px;
+            display: block;
+        }
+        /* Pop-up */
+        .popup-bg {
+            position: fixed;
+            top:0; left:0; width:100vw; height:100vh;
+            background: rgba(0,0,0,0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .popup {
+            background: #232323;
+            padding: 32px 28px;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px #000a;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            min-width: 320px;
+        }
+        .popup label { font-weight: bold; }
+        .popup input {
+            padding: 8px;
+            border-radius: 6px;
+            border: none;
+            margin-bottom: 6px;
+            font-size: 1rem;
+        }
+        .popup .popup-btns {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+        .popup button {
+            padding: 8px 18px;
+            border-radius: 6px;
+            border: none;
+            background: #A259FF;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .popup button:hover { background: #7c3aed; }
+        .popup .msg { color: #ffb347; font-size: 0.98rem;}
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="fichas-title">
+            Fichas
+            <span class="contador" id="contadorFichas">0/6</span>
+        </div>
+        <button class="btn-criar" onclick="abrirPopup()" title="Criar nova ficha"></button>
+    </div>
+    <div class="lista-fichas" id="listaFichas"></div>
+
+    <!-- Pop-up para criar ficha -->
+    <div id="popupBg" class="popup-bg" style="display:none;">
+        <div class="popup">
+            <div>
+                <label for="nomePersonagem">Nome do personagem:</label>
+                <input type="text" id="nomePersonagem" maxlength="32">
+            </div>
+            <div>
+                <label for="idadePersonagem">Idade:</label>
+                <input type="number" id="idadePersonagem" min="1" max="999">
+            </div>
+            <div>
+                <label for="racaPersonagem">Raça:</label>
+                <input type="text" id="racaPersonagem" maxlength="24">
+            </div>
+            <div class="msg" id="popupMsg"></div>
+            <div class="popup-btns">
+                <button onclick="criarFicha()">Criar</button>
+                <button onclick="fecharPopup()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        // --- Utilidades de armazenamento por usuário ---
+        function getUsuarioLogado() {
+            return localStorage.getItem('usuarioLogado');
+        }
+        function getFichasUsuario() {
+            const usuario = getUsuarioLogado();
+            if (!usuario) return [];
+            let fichas = JSON.parse(localStorage.getItem('fichas_' + usuario) || '[]');
+            return fichas;
+        }
+        function setFichasUsuario(fichas) {
+            const usuario = getUsuarioLogado();
+            if (!usuario) return;
+            localStorage.setItem('fichas_' + usuario, JSON.stringify(fichas));
+        }
+
+        // --- Renderização das fichas e contador ---
+        function renderFichas() {
+            const fichas = getFichasUsuario();
+            document.getElementById('contadorFichas').textContent = fichas.length + '/6';
+            const lista = document.getElementById('listaFichas');
+            lista.innerHTML = '';
+            fichas.forEach((ficha, idx) => {
+                const div = document.createElement('div');
+                div.className = 'ficha-item';
+                div.innerHTML = `
+                    <div class="ficha-info">
+                        <span><strong>Nome:</strong> ${ficha.nome}</span>
+                        <span><strong>Idade:</strong> ${ficha.idade}</span>
+                        <span><strong>Raça:</strong> ${ficha.raca}</span>
+                    </div>
+                    <div class="ficha-actions">
+                        <button class="ficha-btn" title="Editar" onclick="editarFicha(${idx})">
+                            <img src="../imagens/edit.png" alt="Editar">
+                        </button>
+                        <button class="ficha-btn" title="Excluir" onclick="excluirFicha(${idx})">
+                            <img src="../imagens/trash.png" alt="Excluir">
+                        </button>
+                    </div>
+                `;
+                lista.appendChild(div);
+            });
+        }
+
+        // --- Pop-up ---
+        function abrirPopup() {
+            if (getFichasUsuario().length >= 6) {
+                alert('Você já atingiu o limite de 6 fichas.');
+                return;
+            }
+            document.getElementById('popupBg').style.display = 'flex';
+            document.getElementById('nomePersonagem').value = '';
+            document.getElementById('idadePersonagem').value = '';
+            document.getElementById('racaPersonagem').value = '';
+            document.getElementById('popupMsg').textContent = '';
+        }
+        function fecharPopup() {
+            document.getElementById('popupBg').style.display = 'none';
+        }
+
+        // --- Criar ficha ---
+        function criarFicha() {
+            const nome = document.getElementById('nomePersonagem').value.trim();
+            const idade = document.getElementById('idadePersonagem').value.trim();
+            const raca = document.getElementById('racaPersonagem').value.trim();
+            if (!nome || !idade || !raca) {
+                document.getElementById('popupMsg').textContent = 'Preencha todos os campos.';
+                return;
+            }
+            if (nome.length > 32 || raca.length > 24) {
+                document.getElementById('popupMsg').textContent = 'Nome ou raça muito longos.';
+                return;
+            }
+            if (isNaN(Number(idade)) || Number(idade) < 1 || Number(idade) > 999) {
+                document.getElementById('popupMsg').textContent = 'Idade inválida.';
+                return;
+            }
+            let fichas = getFichasUsuario();
+            if (fichas.length >= 6) {
+                document.getElementById('popupMsg').textContent = 'Limite de 6 fichas atingido.';
+                return;
+            }
+            fichas.push({ nome, idade, raca });
+            setFichasUsuario(fichas);
+            fecharPopup();
+            renderFichas();
+        }
+
+        // --- Excluir ficha ---
+        function excluirFicha(idx) {
+            if (!confirm('Tem certeza que deseja excluir esta ficha?')) return;
+            let fichas = getFichasUsuario();
+            fichas.splice(idx, 1);
+            setFichasUsuario(fichas);
+            renderFichas();
+        }
+
+        // --- Editar ficha ---
+        function editarFicha(idx) {
+            window.location.href = `../Ficha/Personagem.html?ficha=${idx}`;
+        }
+
+        // --- Checar login e inicializar ---
+        window.onload = function() {
+            if (!getUsuarioLogado()) {
+                window.location.href = '../Registro/login.html';
+                return;
+            }
+            renderFichas();
+        }
+    </script>
+</body>
+</html>

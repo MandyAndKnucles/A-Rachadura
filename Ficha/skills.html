@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Skill set</title>
+    <style>
+        body {
+            background: #f7e1ec;
+            color: #811c44;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 32px 0 18px 0;
+            padding: 0 32px;
+            position: relative;
+            z-index: 10;
+        }
+        .skills-title {
+            font-size: 2.1rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            color: #fff;
+            text-shadow: 1px 1px 8px #c2185b99;
+        }
+        .header-logo {
+            height: 44px;
+            width: auto;
+        }
+        .home-btn {
+            background: #fff !important;
+            border: none;
+            cursor: pointer;
+            margin-left: 12px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px #c2185b22;
+            transition: background 0.18s;
+            width: 38px;
+            height: 38px;
+        }
+        .home-btn img {
+            width: 22px;
+            height: 22px;
+        }
+        .home-btn:hover {
+            background: #ffe3ec !important;
+        }
+        .skills-outer-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 18px;
+            width: 100%;
+        }
+        .skills-container {
+            background: rgba(255,255,255,0.97);
+            border-radius: 18px;
+            box-shadow: 0 4px 24px #c2185b22;
+            padding: 32px 32px 32px 28px;
+            min-width: 340px;
+            max-width: 680px;
+            width: 96vw;
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+            border-left: 6px solid #c2185b;
+            margin: 0 auto;
+        }
+        .skills-header-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+        }
+        .skills-header-row .skills-title {
+            color: #c2185b;
+            text-shadow: 1px 1px 8px #f8bbd0;
+        }
+        .skills-new-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            margin-left: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .skills-new-btn img {
+            width: 32px;
+            height: 32px;
+        }
+        .skill-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .skill-item {
+            background: #fff6fa;
+            border-radius: 10px;
+            padding: 14px 18px;
+            box-shadow: 0 1px 6px #c2185b11;
+            position: relative;
+            transition: box-shadow 0.2s;
+        }
+        .skill-title-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .skill-title {
+            font-size: 1.08rem;
+            font-weight: bold;
+            color: #c2185b;
+        }
+        .skill-type {
+            font-size: 0.95rem;
+            color: #f06292;
+            margin-left: 8px;
+            font-weight: 500;
+        }
+        .skill-arrow-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin-left: 10px;
+            display: flex;
+            align-items: center;
+            transition: transform 0.25s;
+        }
+        .skill-arrow-btn img {
+            width: 22px;
+            height: 22px;
+            transition: transform 0.25s;
+        }
+        .skill-edit-btn, .skill-trash-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin-left: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .skill-edit-btn img, .skill-trash-btn img {
+            width: 22px;
+            height: 22px;
+        }
+        .skill-trash-btn img {
+            filter: grayscale(0.6);
+        }
+        .skill-trash-btn:hover img {
+            filter: grayscale(0) brightness(0.8);
+        }
+        .skill-desc {
+            margin-top: 8px;
+            font-size: 1rem;
+            color: #c2185b;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s cubic-bezier(.68,-0.55,.27,1.55), opacity 0.25s;
+            opacity: 0;
+            padding-left: 4px;
+        }
+        .skill-desc.open {
+            max-height: 400px;
+            opacity: 1;
+            padding-top: 8px;
+        }
+        /* Conhecimentos container */
+        .conhecimentos-container {
+            background: rgba(255,255,255,0.97);
+            border-radius: 18px;
+            box-shadow: 0 4px 24px #c2185b22;
+            padding: 28px 32px 24px 28px;
+            min-width: 340px;
+            max-width: 680px;
+            width: 96vw;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            border-left: 6px solid #7b1fa2;
+            margin: 28px auto 0 auto;
+        }
+        .conhecimentos-header-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .conhecimentos-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #7b1fa2;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .conhecimentos-header-row img.grimorio-icon {
+            width: 32px;
+            height: 32px;
+        }
+        .conhecimentos-arrow-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin-left: 8px;
+            display: flex;
+            align-items: center;
+            transition: transform 0.25s;
+        }
+        .conhecimentos-arrow-btn img {
+            width: 24px;
+            height: 24px;
+            transition: transform 0.25s;
+        }
+        .conhecimentos-categorias {
+            margin-top: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .categoria-row {
+            background: #f3e5f5;
+            border-radius: 10px;
+            padding: 12px 18px;
+            box-shadow: 0 1px 6px #7b1fa211;
+            position: relative;
+            transition: box-shadow 0.2s;
+        }
+        .categoria-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .categoria-title {
+            font-size: 1.08rem;
+            font-weight: bold;
+            color: #7b1fa2;
+        }
+        .categoria-arrow-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin-left: 8px;
+            display: flex;
+            align-items: center;
+            transition: transform 0.25s;
+        }
+        .categoria-arrow-btn img {
+            width: 20px;
+            height: 20px;
+            transition: transform 0.25s;
+        }
+        .categoria-conteudo {
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-height 0.35s cubic-bezier(.68,-0.55,.27,1.55), opacity 0.25s;
+        }
+        .categoria-conteudo.open {
+            max-height: 80px;
+            opacity: 1;
+        }
+        .categoria-new-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        .categoria-new-btn img {
+            width: 28px;
+            height: 28px;
+        }
+        /* Conhecimento item */
+        .conhecimento-item {
+            background: #fff;
+            border-radius: 8px;
+            margin: 6px 0 0 0;
+            padding: 10px 14px;
+            box-shadow: 0 1px 4px #7b1fa211;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            position: relative;
+        }
+        .conhecimento-header-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .conhecimento-nome {
+            font-size: 1.05rem;
+            font-weight: bold;
+            color: #7b1fa2;
+        }
+        .conhecimento-info {
+            font-size: 0.98rem;
+            color: #6d1b7b;
+            margin-left: 8px;
+        }
+        .conhecimento-arrow-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin-left: 8px;
+            display: flex;
+            align-items: center;
+            transition: transform 0.25s;
+        }
+        .conhecimento-arrow-btn img {
+            width: 18px;
+            height: 18px;
+            transition: transform 0.25s;
+        }
+        .conhecimento-desc {
+            margin-top: 6px;
+            font-size: 0.99rem;
+            color: #7b1fa2;
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-height 0.35s cubic-bezier(.68,-0.55,.27,1.55), opacity 0.25s;
+            padding-left: 4px;
+        }
+        .conhecimento-desc.open {
+            max-height: 300px;
+            opacity: 1;
+            padding-top: 6px;
+        }
+        /* Popup Conhecimento */
+        .popup-conhecimento label {
+            font-weight: bold;
+            margin-top: 6px;
+        }
+        .popup-conhecimento input[type="text"] {
+            width: 100%;
+            padding: 7px;
+            border-radius: 6px;
+            border: 1.2px solid #7b1fa2;
+            font-size: 1rem;
+            background: #f3e5f5;
+            color: #7b1fa2;
+            margin-bottom: 6px;
+        }
+        .popup-conhecimento textarea {
+            width: 100%;
+            min-height: 70px;
+            max-height: 220px;
+            padding: 7px;
+            border-radius: 6px;
+            border: 1.2px solid #7b1fa2;
+            font-size: 1rem;
+            background: #f3e5f5;
+            color: #7b1fa2;
+            margin-bottom: 6px;
+            resize: vertical;
+        }
+        .popup-conhecimento .btn-group {
+            display: flex;
+            gap: 8px;
+            margin: 6px 0 10px 0;
+        }
+        .popup-conhecimento .btn-group button {
+            padding: 6px 14px;
+            border-radius: 6px;
+            border: 1.2px solid #7b1fa2;
+            background: #fff;
+            color: #7b1fa2;
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 0.97rem;
+            transition: background 0.18s, color 0.18s;
+        }
+        .popup-conhecimento .btn-group button.selected {
+            background: #7b1fa2;
+            color: #fff;
+        }
+        .popup-conhecimento .popup-btns {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 10px;
+        }
+        .popup-conhecimento .popup-btn {
+            padding: 7px 14px;
+            border-radius: 6px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.97rem;
+            background: #7b1fa2;
+            color: #fff;
+        }
+        .popup-conhecimento .popup-btn.cancelar {
+            background: #fff0f6;
+            color: #7b1fa2;
+            border: 1.2px solid #7b1fa2;
+        }
+        .popup-conhecimento .msg {
+            color: #7b1fa2;
+            font-size: 0.98rem;
+        }
+        .skill-effect-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+        }
+        .skill-effect-btn img {
+            width: 26px;
+            height: 26px;
+        }
+        .skill-effects-list {
+            margin-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .skill-effect-item {
+            background: #ffe3ec;
+            color: #c2185b;
+            border-radius: 8px;
+            padding: 4px 12px;
+            font-size: 0.98rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-block;
+            margin-bottom: 2px;
+            transition: background 0.18s;
+        }
+        .skill-effect-item:hover {
+            background: #f8bbd0;
+        }
+        /* Pop-up */
+        .popup-bg {
+            position: fixed;
+            top:0; left:0; width:100vw; height:100vh;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .popup {
+            background: #fff;
+            padding: 28px 22px;
+            border-radius: 14px;
+            box-shadow: 0 4px 24px #c2185b33;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            min-width: 260px;
+            color: #c2185b;
+        }
+        .popup label { font-weight: bold; }
+        .popup input[type="text"], .popup textarea, .popup select {
+            width: 100%;
+            padding: 7px;
+            border-radius: 6px;
+            border: 1.2px solid #c2185b;
+            font-size: 1rem;
+            background: #fff0f6;
+            color: #c2185b;
+            margin-bottom: 6px;
+            resize: none;
+        }
+        .popup textarea { min-height: 60px; max-height: 200px; }
+        .popup-btns {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+        .popup-btn {
+            padding: 7px 14px;
+            border-radius: 6px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.97rem;
+            background: #f06292;
+            color: #fff;
+        }
+        .popup-btn.cancelar {
+            background: #fff0f6;
+            color: #c2185b;
+            border: 1.2px solid #c2185b;
+        }
+        .popup .msg { color: #c2185b; font-size: 0.98rem;}
+        @media (max-width: 800px) {
+            .skills-container { max-width: 99vw; min-width: unset; padding: 18px 2vw 18px 2vw;}
+            .header { padding: 0 8px;}
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="skills-title">
+            Skill set
+        </div>
+        <div style="display:flex;align-items:center;">
+            <button class="home-btn" onclick="voltarPersonagem()" title="Voltar para a ficha">
+                <img src="../imagens/home.png" alt="Home">
+            </button>
+            <img src="../imagens/logo.png" alt="Logo" class="header-logo">
+        </div>
+    </div>
+    <!-- Menu lateral igual estatisticas -->
+    <button class="menu-btn" id="menuBtn" title="Menu" style="position:fixed;bottom:32px;left:32px;width:54px;height:54px;background:#fff;border-radius:50%;border:none;box-shadow:0 4px 18px #c2185b22;display:flex;align-items:center;justify-content:center;z-index:200;">
+        <img src="../imagens/menu.png" alt="Menu" style="width:30px;height:30px;">
+    </button>
+    <div class="menu-sidebar" id="menuSidebar" style="position:fixed;bottom:32px;left:32px;transform:translateX(-120%);transition:transform 0.4s cubic-bezier(.68,-0.55,.27,1.55);background:#fff;border-radius:40px 18px 18px 40px;box-shadow:0 4px 24px #c2185b22;padding:28px 24px 28px 80px;display:flex;flex-direction:column;gap:22px;min-width:220px;z-index:199;">
+        <div class="menu-item" onclick="irPara('estatisticas')" style="display:flex;align-items:center;gap:16px;background:rgba(194,24,91,0.07);border-radius:12px;padding:10px 18px;color:#c2185b;font-size:1.13rem;font-weight:500;cursor:pointer;border:none;outline:none;transition:background 0.18s;">
+            <img src="../imagens/est.png" alt="Estatísticas" style="width:28px;height:28px;"> Estatísticas
+        </div>
+        <div class="menu-item" onclick="irPara('skills')" style="display:flex;align-items:center;gap:16px;background:rgba(194,24,91,0.07);border-radius:12px;padding:10px 18px;color:#c2185b;font-size:1.13rem;font-weight:500;cursor:pointer;border:none;outline:none;transition:background 0.18s;">
+            <img src="../imagens/skill.png" alt="Skills" style="width:28px;height:28px;"> Skills
+        </div>
+        <div class="menu-item" onclick="irPara('inventario')" style="display:flex;align-items:center;gap:16px;background:rgba(194,24,91,0.07);border-radius:12px;padding:10px 18px;color:#c2185b;font-size:1.13rem;font-weight:500;cursor:pointer;border:none;outline:none;transition:background 0.18s;">
+            <img src="../imagens/inv.png" alt="Inventário" style="width:28px;height:28px;"> Inventário
+        </div>
+        <div class="menu-item" onclick="irPara('combate')" style="display:flex;align-items:center;gap:16px;background:rgba(194,24,91,0.07);border-radius:12px;padding:10px 18px;color:#c2185b;font-size:1.13rem;font-weight:500;cursor:pointer;border:none;outline:none;transition:background 0.18s;">
+            <img src="../imagens/Combate.png" alt="Combate" style="width:28px;height:28px;"> Combate
+        </div>
+        <div class="menu-item" onclick="irPara('calculadora')" style="display:flex;align-items:center;gap:16px;background:rgba(194,24,91,0.07);border-radius:12px;padding:10px 18px;color:#c2185b;font-size:1.13rem;font-weight:500;cursor:pointer;border:none;outline:none;transition:background 0.18s;">
+            <img src="../imagens/Calc.png" alt="Calculadora" style="width:28px;height:28px;"> Calculadora
+        </div>
+    </div>
+    <div class="skills-outer-container">
+        <div class="skills-container">
+            <div class="skills-header-row">
+                <span class="skills-title">Skill set</span>
+                <button class="skills-new-btn" onclick="abrirSkillPopup()" type="button" title="Nova skill">
+                    <img src="../imagens/new.png" alt="Nova">
+                </button>
+            </div>
+            <div class="skill-list" id="skillList"></div>
+        </div>
+        <!-- Conhecimentos container -->
+        <div class="conhecimentos-container">
+            <div class="conhecimentos-header-row" onclick="toggleConhecimentos()">
+                <span class="conhecimentos-title">
+                    <img src="../imagens/grimorium.png" class="grimorio-icon" alt="Grimório">
+                    Conhecimentos
+                </span>
+                <button class="conhecimentos-arrow-btn" id="conhecimentosArrowBtn" type="button" tabindex="-1">
+                    <img src="../imagens/arrow.png" alt="Expandir">
+                </button>
+            </div>
+            <div class="conhecimentos-categorias" id="conhecimentosCategorias" style="display:none;">
+                <div class="categoria-row">
+                    <div class="categoria-header" onclick="event.stopPropagation(); toggleCategoria('magias')">
+                        <span class="categoria-title">Magias</span>
+                        <button class="categoria-arrow-btn" id="catArrow-magias" type="button" tabindex="-1">
+                            <img src="../imagens/arrow.png" alt="Expandir">
+                        </button>
+                    </div>
+                    <div class="categoria-conteudo" id="catConteudo-magias">
+                        <button class="categoria-new-btn" onclick="event.stopPropagation(); novaConhecimento('magias')" title="Nova magia">
+                            <img src="../imagens/new.png" alt="Nova">
+                        </button>
+                        <div id="conhecimentosList-magias"></div>
+                    </div>
+                </div>
+                <div class="categoria-row">
+                    <div class="categoria-header" onclick="event.stopPropagation(); toggleCategoria('feiticos')">
+                        <span class="categoria-title">Feitiços</span>
+                        <button class="categoria-arrow-btn" id="catArrow-feiticos" type="button" tabindex="-1">
+                            <img src="../imagens/arrow.png" alt="Expandir">
+                        </button>
+                    </div>
+                    <div class="categoria-conteudo" id="catConteudo-feiticos">
+                        <button class="categoria-new-btn" onclick="event.stopPropagation(); novaConhecimento('feiticos')" title="Novo feitiço">
+                            <img src="../imagens/new.png" alt="Nova">
+                        </button>
+                        <div id="conhecimentosList-feiticos"></div>
+                    </div>
+                </div>
+                <div class="categoria-row">
+                    <div class="categoria-header" onclick="event.stopPropagation(); toggleCategoria('rituais')">
+                        <span class="categoria-title">Rituais</span>
+                        <button class="categoria-arrow-btn" id="catArrow-rituais" type="button" tabindex="-1">
+                            <img src="../imagens/arrow.png" alt="Expandir">
+                        </button>
+                    </div>
+                    <div class="categoria-conteudo" id="catConteudo-rituais">
+                        <button class="categoria-new-btn" onclick="event.stopPropagation(); novaConhecimento('rituais')" title="Novo ritual">
+                            <img src="../imagens/new.png" alt="Nova">
+                        </button>
+                        <div id="conhecimentosList-rituais"></div>
+                    </div>
+                </div>
+                <div class="categoria-row">
+                    <div class="categoria-header" onclick="event.stopPropagation(); toggleCategoria('encantamentos')">
+                        <span class="categoria-title">Encantamentos</span>
+                        <button class="categoria-arrow-btn" id="catArrow-encantamentos" type="button" tabindex="-1">
+                            <img src="../imagens/arrow.png" alt="Expandir">
+                        </button>
+                    </div>
+                    <div class="categoria-conteudo" id="catConteudo-encantamentos">
+                        <button class="categoria-new-btn" onclick="event.stopPropagation(); novaConhecimento('encantamentos')" title="Novo encantamento">
+                            <img src="../imagens/new.png" alt="Nova">
+                        </button>
+                        <div id="conhecimentosList-encantamentos"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pop-up Nova/Editar Skill -->
+    <div id="skillPopupBg" class="popup-bg" style="display:none;">
+        <div class="popup">
+            <label for="skillNomeInput">Nome da skill</label>
+            <input id="skillNomeInput" maxlength="40" type="text">
+            <label>Tipo</label>
+            <div style="display:flex;gap:12px;margin-bottom:8px;">
+                <label><input type="radio" name="skillTipo" value="passiva" checked> Passiva</label>
+                <label><input type="radio" name="skillTipo" value="habilidade"> Habilidade</label>
+                <label><input type="radio" name="skillTipo" value="ultimate"> Ultimate</label>
+            </div>
+            <label for="skillDescInput">Descrição</label>
+            <textarea id="skillDescInput" maxlength="800"></textarea>
+            <div class="popup-btns" style="margin-top:10px;">
+                <button class="popup-btn" onclick="salvarSkillPopup()">Salvar</button>
+                <button class="popup-btn cancelar" onclick="fecharSkillPopup()">Cancelar</button>
+            </div>
+            <div class="msg" id="skillPopupMsg"></div>
+        </div>
+    </div>
+
+    <!-- Pop-up Novo Efeito -->
+    <div id="effectPopupBg" class="popup-bg" style="display:none;">
+        <div class="popup">
+            <label for="effectValorInput">Efeito novo da skill (%)</label>
+            <input id="effectValorInput" type="number" min="1" max="999">
+            <label for="effectStatInput">Estatística</label>
+            <select id="effectStatInput">
+                <option value="atk">Ataque</option>
+                <option value="atkEsp">Ataque Especial</option>
+                <option value="def">Defesa</option>
+                <option value="defEsp">Defesa Especial</option>
+                <option value="vel">Velocidade</option>
+            </select>
+            <div class="popup-btns" style="margin-top:10px;">
+                <button class="popup-btn" onclick="salvarEffectPopup()">Salvar</button>
+                <button class="popup-btn cancelar" onclick="fecharEffectPopup()">Cancelar</button>
+            </div>
+            <div class="msg" id="effectPopupMsg"></div>
+        </div>
+    </div>
+
+    <!-- Pop-up Cálculo do Efeito -->
+    <div id="calcPopupBg" class="popup-bg" style="display:none;">
+        <div class="popup" id="calcPopupContent"></div>
+    </div>
+
+    <!-- Pop-up Novo Conhecimento -->
+    <div id="conhecimentoPopupBg" class="popup-bg" style="display:none;">
+        <div class="popup popup-conhecimento">
+            <label for="conhecimentoNomeInput">Nome do Conhecimento <span style="color:#c2185b;">*</span></label>
+            <input id="conhecimentoNomeInput" maxlength="60" type="text">
+            <label for="conhecimentoDescInput">Descrição</label>
+            <textarea id="conhecimentoDescInput" maxlength="1200"></textarea>
+            <label for="conhecimentoDanoInput">Dano</label>
+            <input id="conhecimentoDanoInput" maxlength="40" type="text">
+            <label for="conhecimentoCustoInput">Custo</label>
+            <input id="conhecimentoCustoInput" maxlength="40" type="text">
+            <div id="conhecimentoExtraPergunta"></div>
+            <div class="popup-btns">
+                <button class="popup-btn" onclick="salvarConhecimentoPopup()">Salvar</button>
+                <button class="popup-btn cancelar" onclick="fecharConhecimentoPopup()">Cancelar</button>
+            </div>
+            <div class="msg" id="conhecimentoPopupMsg"></div>
+        </div>
+    </div>
+
+    <script>
+        // --- Menu lateral reutilizável ---
+        const menuBtn = document.getElementById('menuBtn');
+        const menuSidebar = document.getElementById('menuSidebar');
+        let menuAberto = false;
+        if (menuBtn && menuSidebar) {
+            menuBtn.addEventListener('click', function() {
+                menuAberto = !menuAberto;
+                menuSidebar.style.transform = menuAberto ? 'translateX(0)' : 'translateX(-120%)';
+                menuBtn.classList.add('girando');
+                setTimeout(() => menuBtn.classList.remove('girando'), 400);
+            });
+            document.addEventListener('click', function(e) {
+                if (
+                    menuAberto &&
+                    !menuSidebar.contains(e.target) &&
+                    !menuBtn.contains(e.target)
+                ) {
+                    menuSidebar.style.transform = 'translateX(-120%)';
+                    menuAberto = false;
+                }
+            });
+        }
+        function irPara(destino) {
+            const url = new URL(window.location.href);
+            const idx = url.searchParams.get('ficha');
+            let rota = '';
+            switch(destino) {
+                case 'estatisticas': rota = `estatisticas.html?ficha=${idx}`; break;
+                case 'skills': rota = `skills.html?ficha=${idx}`; break;
+                case 'inventario': rota = `inventario.html?ficha=${idx}`; break;
+                case 'combate': rota = `combate.html?ficha=${idx}`; break;
+                case 'calculadora': rota = `calculadora.html?ficha=${idx}`; break;
+                default: return;
+            }
+            window.location.href = rota;
+        }
+        function voltarPersonagem() {
+            const url = new URL(window.location.href);
+            const idx = url.searchParams.get('ficha');
+            window.location.href = `personagem.html?ficha=${idx}`;
+        }
+
+        // --- Dados e lógica das skills ---
+        function getQueryParam(nome) {
+            const url = new URL(window.location.href);
+            return url.searchParams.get(nome);
+        }
+        function getUsuarioLogado() {
+            return localStorage.getItem('usuarioLogado');
+        }
+        function getFichasUsuario() {
+            const usuario = getUsuarioLogado();
+            if (!usuario) return [];
+            let fichas = JSON.parse(localStorage.getItem('fichas_' + usuario) || '[]');
+            return fichas;
+        }
+        function setFichasUsuario(fichas) {
+            const usuario = getUsuarioLogado();
+            if (!usuario) return;
+            localStorage.setItem('fichas_' + usuario, JSON.stringify(fichas));
+        }
+        let idxFicha = null;
+        let ficha = null;
+        let skillEditIdx = null;
+        let effectSkillIdx = null;
+        let effectEditIdx = null;
+
+        // Renderização das skills
+        function renderSkillList() {
+            const fichas = getFichasUsuario();
+            if (isNaN(idxFicha) || !fichas[idxFicha]) return;
+            const skills = fichas[idxFicha].skills || [];
+            const skillList = document.getElementById('skillList');
+            skillList.innerHTML = '';
+            skills.forEach((skill, i) => {
+                let typeLabel = skill.tipo === 'passiva' ? 'Passiva' : (skill.tipo === 'habilidade' ? 'Habilidade' : 'Ultimate');
+                let effectsHtml = '';
+                if (skill.efeitos && skill.efeitos.length) {
+                    effectsHtml = `<div class="skill-effects-list">` +
+                        skill.efeitos.map((ef, j) =>
+                            `<span class="skill-effect-item" onclick="abrirCalcPopup(${i},${j})">${ef.valor}% de ${estatLabel(ef.estat)}</span>`
+                        ).join('') +
+                        `</div>`;
+                }
+                skillList.innerHTML += `
+                    <div class="skill-item">
+                        <div class="skill-title-row" onclick="toggleSkillDesc(${i})">
+                            <span class="skill-title">${skill.nome}</span>
+                            <span class="skill-type">(${typeLabel})</span>
+                            <button class="skill-arrow-btn" id="skillArrow${i}" type="button">
+                                <img src="../imagens/arrow.png" alt="Abrir">
+                            </button>
+                            <button class="skill-edit-btn" type="button" onclick="event.stopPropagation(); editarSkill(${i});">
+                                <img src="../imagens/edit.png" alt="Editar">
+                            </button>
+                            <button class="skill-trash-btn" type="button" onclick="event.stopPropagation(); deletarSkill(${i});" title="Deletar">
+                                <img src="../imagens/trash.png" alt="Deletar">
+                            </button>
+                        </div>
+                        <div class="skill-desc" id="skillDesc${i}">
+                            <div>${skill.descricao.replace(/\n/g, '<br>')}</div>
+                            <button class="skill-effect-btn" onclick="event.stopPropagation(); abrirEffectPopup(${i});" title="Novo efeito">
+                                <img src="../imagens/powereffect.png" alt="Efeito">
+                            </button>
+                            ${effectsHtml}
+                        </div>
+                    </div>
+                `;
+            });
+        }
+        function estatLabel(estat) {
+            switch(estat) {
+                case 'atk': return 'Ataque';
+                case 'atkEsp': return 'Ataque Especial';
+                case 'def': return 'Defesa';
+                case 'defEsp': return 'Defesa Especial';
+                case 'vel': return 'Velocidade';
+                default: return '';
+            }
+        }
+        function toggleSkillDesc(idx) {
+            const desc = document.getElementById('skillDesc'+idx);
+            const arrow = document.getElementById('skillArrow'+idx).querySelector('img');
+            if (desc.classList.contains('open')) {
+                desc.classList.remove('open');
+                arrow.style.transform = 'rotate(0deg)';
+            } else {
+                desc.classList.add('open');
+                arrow.style.transform = 'rotate(90deg)';
+            }
+        }
+        function abrirSkillPopup(editIdx = null) {
+            skillEditIdx = editIdx;
+            document.getElementById('skillPopupBg').style.display = 'flex';
+            document.getElementById('skillPopupMsg').textContent = '';
+            if (editIdx !== null) {
+                const fichas = getFichasUsuario();
+                const skill = fichas[idxFicha].skills[editIdx];
+                document.getElementById('skillNomeInput').value = skill.nome;
+                document.querySelectorAll('input[name="skillTipo"]').forEach(r => {
+                    r.checked = (r.value === skill.tipo);
+                });
+                document.getElementById('skillDescInput').value = skill.descricao;
+            } else {
+                document.getElementById('skillNomeInput').value = '';
+                document.querySelectorAll('input[name="skillTipo"]').forEach(r => {
+                    r.checked = (r.value === 'passiva');
+                });
+                document.getElementById('skillDescInput').value = '';
+            }
+        }
+        function fecharSkillPopup() {
+            document.getElementById('skillPopupBg').style.display = 'none';
+        }
+        function salvarSkillPopup() {
+            const nome = document.getElementById('skillNomeInput').value.trim();
+            const desc = document.getElementById('skillDescInput').value.trim();
+            const tipo = document.querySelector('input[name="skillTipo"]:checked').value;
+            if (!nome || !desc || !tipo) {
+                document.getElementById('skillPopupMsg').textContent = 'Preencha todos os campos.';
+                return;
+            }
+            const fichas = getFichasUsuario();
+            if (isNaN(idxFicha) || !fichas[idxFicha]) return;
+            if (!fichas[idxFicha].skills) fichas[idxFicha].skills = [];
+            if (skillEditIdx !== null) {
+                let skill = fichas[idxFicha].skills[skillEditIdx];
+                fichas[idxFicha].skills[skillEditIdx] = { ...skill, nome, descricao: desc, tipo };
+            } else {
+                fichas[idxFicha].skills.push({ nome, descricao: desc, tipo, efeitos: [] });
+            }
+            setFichasUsuario(fichas);
+            fecharSkillPopup();
+            renderSkillList();
+        }
+        function editarSkill(idx) {
+            abrirSkillPopup(idx);
+        }
+        function deletarSkill(idx) {
+            if (!confirm('Deseja realmente deletar esta skill?')) return;
+            const fichas = getFichasUsuario();
+            if (isNaN(idxFicha) || !fichas[idxFicha]) return;
+            fichas[idxFicha].skills.splice(idx, 1);
+            setFichasUsuario(fichas);
+            renderSkillList();
+        }
+
+        // --- Efeitos das skills ---
+        function abrirEffectPopup(skillIdx) {
+            effectSkillIdx = skillIdx;
+            effectEditIdx = null;
+            document.getElementById('effectValorInput').value = '';
+            document.getElementById('effectStatInput').value = 'atk';
+            document.getElementById('effectPopupMsg').textContent = '';
+            document.getElementById('effectPopupBg').style.display = 'flex';
+        }
+        function fecharEffectPopup() {
+            document.getElementById('effectPopupBg').style.display = 'none';
+        }
+        function salvarEffectPopup() {
+            const valor = parseInt(document.getElementById('effectValorInput').value);
+            const estat = document.getElementById('effectStatInput').value;
+            if (!valor || valor < 1) {
+                document.getElementById('effectPopupMsg').textContent = 'Insira um valor válido.';
+                return;
+            }
+            const fichas = getFichasUsuario();
+            if (isNaN(idxFicha) || !fichas[idxFicha]) return;
+            if (!fichas[idxFicha].skills[effectSkillIdx].efeitos) fichas[idxFicha].skills[effectSkillIdx].efeitos = [];
+            fichas[idxFicha].skills[effectSkillIdx].efeitos.push({ valor, estat });
+            setFichasUsuario(fichas);
+            fecharEffectPopup();
+            renderSkillList();
+        }
+
+        // --- Cálculo do efeito ---
+        function abrirCalcPopup(skillIdx, effectIdx) {
+            const fichas = getFichasUsuario();
+            if (isNaN(idxFicha) || !fichas[idxFicha]) return;
+            const skill = fichas[idxFicha].skills[skillIdx];
+            const effect = skill.efeitos[effectIdx];
+            // Buscar valor total da estatística na ficha
+            let statsFicha = JSON.parse(localStorage.getItem('fichas_' + getUsuarioLogado()) || '[]')[idxFicha];
+            let statKey = effect.estat;
+            let statObj = statsFicha && statsFicha[statKey];
+            let valorTotal = 0;
+            if (statObj) {
+                let valorBase = parseInt(statObj.base) || 0;
+                let buffs = (statObj.buffs || []).slice();
+                let debuffs = (statObj.debuffs || []).slice();
+                let prioridades = (statObj.prioridades || []).slice();
+                let buffsNormais = buffs.filter((_, i) => !prioridades.includes(i));
+                let buffsPrioridade = buffs.filter((_, i) => prioridades.includes(i));
+                buffsPrioridade.sort((a, b) => b - a);
+                buffsNormais.sort((a, b) => b - a);
+                let debuffsNormais = debuffs.filter((_, i) => !prioridades.includes(1000 + i));
+                let debuffsPrioridade = debuffs.filter((_, i) => prioridades.includes(1000 + i));
+                debuffsPrioridade.sort((a, b) => a - b);
+                debuffsNormais.sort((a, b) => a - b);
+                valorTotal = valorBase;
+                buffsPrioridade.forEach(buff => {
+                    valorTotal = Math.floor(valorTotal + valorTotal * (buff / 100));
+                });
+                buffsNormais.forEach(buff => {
+                    valorTotal = Math.floor(valorTotal + valorTotal * (buff / 100));
+                });
+                debuffsPrioridade.forEach(debuff => {
+                    valorTotal = Math.floor(valorTotal - valorTotal * (debuff / 100));
+                });
+                debuffsNormais.forEach(debuff => {
+                    valorTotal = Math.floor(valorTotal - valorTotal * (debuff / 100));
+                });
+            }
+            let resultado = Math.floor((effect.valor * valorTotal) / 100);
+            document.getElementById('calcPopupContent').innerHTML = `
+                <div style="font-weight:bold;font-size:1.1rem;margin-bottom:10px;">Cálculo do Efeito</div>
+                <div style="margin-bottom:8px;">${effect.valor}% de ${estatLabel(effect.estat)} (${valorTotal})</div>
+                <div style="font-size:1.08rem;">${effect.valor} x ${valorTotal} = <b>${effect.valor * valorTotal}</b></div>
+                <div style="margin:8px 0;">Dividido por 100:</div>
+                <div style="font-size:1.15rem;"><b>${effect.valor * valorTotal} / 100 = ${resultado}</b></div>
+                <button class="popup-btn cancelar" style="margin-top:18px;" onclick="fecharCalcPopup()">Fechar</button>
+            `;
+            document.getElementById('calcPopupBg').style.display = 'flex';
+        }
+        function fecharCalcPopup() {
+            document.getElementById('calcPopupBg').style.display = 'none';
+        }
+
+        // Inicialização
+        window.onload = function() {
+            if (!getUsuarioLogado()) {
+                window.location.href = '../Registro/login.html';
+                return;
+            }
+            idxFicha = parseInt(getQueryParam('ficha'));
+            const fichas = getFichasUsuario();
+            if (isNaN(idxFicha) || !fichas[idxFicha]) {
+                document.getElementById('skillList').innerHTML = '<span style="color:#c2185b;">Ficha não encontrada.</span>';
+                return;
+            }
+            ficha = fichas[idxFicha];
+            if (!ficha.skills) ficha.skills = [];
+            renderSkillList();
+            // Conhecimentos: inicializa setas
+            document.getElementById('conhecimentosArrowBtn').addEventListener('click', function(e) {
+                e.stopPropagation();
+                toggleConhecimentos();
+            });
+            ['magias','feiticos','rituais','encantamentos'].forEach(cat => {
+                document.getElementById('catArrow-' + cat).addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    toggleCategoria(cat);
+                });
+            });
+            // Inicializa lista de conhecimentos
+            if (!ficha.conhecimentos) ficha.conhecimentos = { magias: [], feiticos: [], rituais: [], encantamentos: [] };
+            renderConhecimentos();
+        }
+
+        // --- Conhecimentos: lógica de expandir/contrair ---
+        let conhecimentosAberto = false;
+        const categoriasAbertas = { magias: false, feiticos: false, rituais: false, encantamentos: false };
+        function toggleConhecimentos() {
+            conhecimentosAberto = !conhecimentosAberto;
+            const catDiv = document.getElementById('conhecimentosCategorias');
+            const arrow = document.getElementById('conhecimentosArrowBtn').querySelector('img');
+            if (conhecimentosAberto) {
+                catDiv.style.display = 'block';
+                arrow.style.transform = 'rotate(90deg)';
+            } else {
+                catDiv.style.display = 'none';
+                arrow.style.transform = 'rotate(0deg)';
+                // Fecha todas as categorias
+                Object.keys(categoriasAbertas).forEach(cat => {
+                    categoriasAbertas[cat] = false;
+                    document.getElementById('catConteudo-' + cat).classList.remove('open');
+                    document.getElementById('catArrow-' + cat).querySelector('img').style.transform = 'rotate(0deg)';
+                });
+            }
+        }
+        function toggleCategoria(cat) {
+            categoriasAbertas[cat] = !categoriasAbertas[cat];
+            const conteudo = document.getElementById('catConteudo-' + cat);
+            const arrow = document.getElementById('catArrow-' + cat).querySelector('img');
+            if (categoriasAbertas[cat]) {
+                conteudo.classList.add('open');
+                arrow.style.transform = 'rotate(90deg)';
+            } else {
+                conteudo.classList.remove('open');
+                arrow.style.transform = 'rotate(0deg)';
+            }
+        }
+        function novaConhecimento(cat) {
+            conhecimentoCategoriaAtual = cat;
+            document.getElementById('conhecimentoPopupBg').style.display = 'flex';
+            document.getElementById('conhecimentoPopupMsg').textContent = '';
+            document.getElementById('conhecimentoNomeInput').value = '';
+            document.getElementById('conhecimentoDescInput').value = '';
+            document.getElementById('conhecimentoDanoInput').value = '';
+            document.getElementById('conhecimentoCustoInput').value = '';
+            // Extra pergunta
+            let extraHtml = '';
+            if (cat === 'magias') {
+                extraHtml = `<label>Círculo</label><div class="btn-group" id="conhecimentoCirculoBtns">
+                    <button type="button" data-circulo="1">1°</button>
+                    <button type="button" data-circulo="2">2°</button>
+                    <button type="button" data-circulo="3">3°</button>
+                    <button type="button" data-circulo="4">4°</button>
+                    <button type="button" data-circulo="5">5°</button>
+                </div>`;
+            } else if (cat === 'feiticos') {
+                extraHtml = `<label>Grau de Aprendizagem</label><div class="btn-group" id="conhecimentoGrauBtns">
+                    <button type="button" data-grau="Nulo">Nulo</button>
+                    <button type="button" data-grau="Aprendiz">Aprendiz</button>
+                    <button type="button" data-grau="Intermediário">Intermediário</button>
+                    <button type="button" data-grau="Avançado">Avançado</button>
+                    <button type="button" data-grau="Grão-Mestre">Grão-Mestre</button>
+                </div>`;
+            }
+            document.getElementById('conhecimentoExtraPergunta').innerHTML = extraHtml;
+            conhecimentoCirculoSelecionado = null;
+            conhecimentoGrauSelecionado = null;
+            // Add listeners
+            setTimeout(() => {
+                if (cat === 'magias') {
+                    document.querySelectorAll('#conhecimentoCirculoBtns button').forEach(btn => {
+                        btn.onclick = function() {
+                            document.querySelectorAll('#conhecimentoCirculoBtns button').forEach(b => b.classList.remove('selected'));
+                            btn.classList.add('selected');
+                            conhecimentoCirculoSelecionado = btn.getAttribute('data-circulo');
+                        }
+                    });
+                } else if (cat === 'feiticos') {
+                    document.querySelectorAll('#conhecimentoGrauBtns button').forEach(btn => {
+                        btn.onclick = function() {
+                            document.querySelectorAll('#conhecimentoGrauBtns button').forEach(b => b.classList.remove('selected'));
+                            btn.classList.add('selected');
+                            conhecimentoGrauSelecionado = btn.getAttribute('data-grau');
+                        }
+                    });
+                }
+            }, 50);
+        }
+
+        let conhecimentoCategoriaAtual = null;
+        let conhecimentoCirculoSelecionado = null;
+        let conhecimentoGrauSelecionado = null;
+
+        function fecharConhecimentoPopup() {
+            document.getElementById('conhecimentoPopupBg').style.display = 'none';
+        }
+
+        function salvarConhecimentoPopup() {
+            const nome = document.getElementById('conhecimentoNomeInput').value.trim();
+            const desc = document.getElementById('conhecimentoDescInput').value.trim();
+            const dano = document.getElementById('conhecimentoDanoInput').value.trim();
+            const custo = document.getElementById('conhecimentoCustoInput').value.trim();
+            let extra = null;
+            if (!nome) {
+                document.getElementById('conhecimentoPopupMsg').textContent = 'O nome é obrigatório.';
+                return;
+            }
+            if (conhecimentoCategoriaAtual === 'magias') {
+                if (!conhecimentoCirculoSelecionado) {
+                    document.getElementById('conhecimentoPopupMsg').textContent = 'Selecione o círculo da magia.';
+                    return;
+                }
+                extra = conhecimentoCirculoSelecionado;
+            } else if (conhecimentoCategoriaAtual === 'feiticos') {
+                if (!conhecimentoGrauSelecionado) {
+                    document.getElementById('conhecimentoPopupMsg').textContent = 'Selecione o grau de aprendizagem.';
+                    return;
+                }
+                extra = conhecimentoGrauSelecionado;
+            }
+            // Salva
+            const fichas = getFichasUsuario();
+            if (isNaN(idxFicha) || !fichas[idxFicha]) return;
+            if (!fichas[idxFicha].conhecimentos) fichas[idxFicha].conhecimentos = { magias: [], feiticos: [], rituais: [], encantamentos: [] };
+            const novo = { nome, descricao: desc, dano, custo };
+            if (conhecimentoCategoriaAtual === 'magias') novo.circulo = extra;
+            if (conhecimentoCategoriaAtual === 'feiticos') novo.grau = extra;
+            fichas[idxFicha].conhecimentos[conhecimentoCategoriaAtual].push(novo);
+            setFichasUsuario(fichas);
+            fecharConhecimentoPopup();
+            renderConhecimentos();
+        }
+
+        function renderConhecimentos() {
+            const fichas = getFichasUsuario();
+            if (isNaN(idxFicha) || !fichas[idxFicha]) return;
+            const conhecimentos = fichas[idxFicha].conhecimentos || { magias: [], feiticos: [], rituais: [], encantamentos: [] };
+            ['magias','feiticos','rituais','encantamentos'].forEach(cat => {
+                const listDiv = document.getElementById('conhecimentosList-' + cat);
+                if (!listDiv) return;
+                listDiv.innerHTML = '';
+                conhecimentos[cat].forEach((con, i) => {
+                    let info = '';
+                    if (cat === 'magias' && con.circulo) info += ` <span class='conhecimento-info'>Círculo: ${con.circulo}°</span>`;
+                    if (cat === 'feiticos' && con.grau) info += ` <span class='conhecimento-info'>Grau: ${con.grau}</span>`;
+                    if (con.dano) info += ` <span class='conhecimento-info'>Dano: ${con.dano}</span>`;
+                    if (con.custo) info += ` <span class='conhecimento-info'>Custo: ${con.custo}</span>`;
+                    listDiv.innerHTML += `
+                        <div class="conhecimento-item">
+                            <div class="conhecimento-header-row" onclick="toggleConhecimentoDesc('${cat}',${i})">
+                                <span class="conhecimento-nome">${con.nome}</span>
+                                ${info}
+                                <button class="conhecimento-arrow-btn" id="conhecimentoArrow-${cat}-${i}" type="button" tabindex="-1">
+                                    <img src="../imagens/arrow.png" alt="Expandir">
+                                </button>
+                            </div>
+                            <div class="conhecimento-desc" id="conhecimentoDesc-${cat}-${i}">${con.descricao ? con.descricao.replace(/\n/g, '<br>') : ''}</div>
+                        </div>
+                    `;
+                });
+                // Add listeners para expandir
+                conhecimentos[cat].forEach((_, i) => {
+                    const btn = document.getElementById('conhecimentoArrow-' + cat + '-' + i);
+                    if (btn) {
+                        btn.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            toggleConhecimentoDesc(cat, i);
+                        });
+                    }
+                });
+            });
+        }
+
+        function toggleConhecimentoDesc(cat, idx) {
+            const desc = document.getElementById('conhecimentoDesc-' + cat + '-' + idx);
+            const arrow = document.getElementById('conhecimentoArrow-' + cat + '-' + idx).querySelector('img');
+            if (desc.classList.contains('open')) {
+                desc.classList.remove('open');
+                arrow.style.transform = 'rotate(0deg)';
+            } else {
+                desc.classList.add('open');
+                arrow.style.transform = 'rotate(90deg)';
+            }
+        }
+    </script>
+</body>
+</html>

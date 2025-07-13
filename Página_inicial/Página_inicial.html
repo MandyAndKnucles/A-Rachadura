@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <script src="../js/storage.js"></script>
+    <script src="../js/pagina_inicial.js"></script>
+    <meta charset="UTF-8">
+    <title>Página Inicial - A Rachadura RPG</title>
+    <style>
+        body {
+            background: url('../imagens/fundo_2.png') no-repeat center center fixed;
+            background-size: cover;
+            color: #f5f5f5;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            display: block;
+        }
+        .header {
+            width: 100vw;
+            min-width: 320px;
+            background: #232323;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            height: 70px;
+            box-sizing: border-box;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 10;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+        .header-logo {
+            height: 48px;
+            margin-right: 24px;
+        }
+        .header-title {
+            font-size: 2rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: #f5f5f5;
+            font-family: 'Título fonte', 'Segoe UI', Arial, sans-serif;
+        }
+        .header-buttons {
+            display: flex;
+            gap: 18px;
+        }
+        .header-btn, .header-user {
+            padding: 0.6rem 1.6rem;
+            font-size: 1rem;
+            background: #8d5e8d;
+            color: #fff;
+            border: none;
+            border-radius: 24px;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-weight: 500;
+        }
+        .header-btn:hover {
+            background: #444;
+        }
+        .header-user {
+            background: transparent;
+            color: #daa9da;
+            font-weight: bold;
+            cursor: default;
+        }
+        .logout-btn {
+            padding: 0.6rem 1.2rem;
+            font-size: 1rem;
+            background: transparent;
+            color: #fff;
+            border: none;
+            border-radius: 24px;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: background 0.2s;
+            font-weight: 500;
+        }
+        .logout-btn:hover {
+            background: #d66;
+        }
+        .container {
+            background: rgba(24, 24, 24, 0.85);
+            border-radius: 16px;
+            padding: 40px 32px 32px 32px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 100px;
+        }
+        .ficha-container {
+            margin-top: 32px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+        .ficha-btn {
+            padding: 1rem 2.5rem;
+            font-size: 1.2rem;
+            background: #E1C16E;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 10px;
+        }
+        .ficha-btn:hover {
+            background: #a38b4c;
+        }
+        .msg {
+            color: #ffb347;
+            font-size: 1rem;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <img src="../imagens/logo.png" alt="Logo" class="header-logo">
+            <span class="header-title">A Rachadura</span>
+        </div>
+        <div class="header-buttons" id="headerButtons">
+            <!-- Botões de login/registro ou nome do usuário serão inseridos via JS -->
+        </div>
+    </div>
+    <div class="container">
+        <h1>Página Inicial</h1>
+        <p>Você chegou à próxima etapa do RPG! Personalize esta página como desejar.</p>
+        <div class="ficha-container">
+            <button class="ficha-btn" onclick="criarFicha()">Criar Ficha</button>
+            <div id="fichaMsg" class="msg"></div>
+        </div>
+    </div>
+    <script>
+        // Atualiza header com nome do usuário se estiver logado
+        function atualizarHeader() {
+            const headerButtons = document.getElementById('headerButtons');
+            headerButtons.innerHTML = '';
+            const usuario = localStorage.getItem('usuarioLogado');
+            if (usuario) {
+                // Mostra nome do usuário e botão de sair
+                const userSpan = document.createElement('span');
+                userSpan.className = 'header-user';
+                userSpan.textContent = usuario;
+                headerButtons.appendChild(userSpan);
+
+                const logoutBtn = document.createElement('button');
+                logoutBtn.className = 'logout-btn';
+                logoutBtn.textContent = 'Sair';
+                logoutBtn.onclick = function() {
+                    localStorage.removeItem('usuarioLogado');
+                    location.reload();
+                };
+                headerButtons.appendChild(logoutBtn);
+            } else {
+                // Mostra botões de login e registro
+                const loginBtn = document.createElement('button');
+                loginBtn.className = 'header-btn';
+                loginBtn.textContent = 'Login';
+                loginBtn.onclick = function() {
+                    window.location.href = '../Registro/login.html';
+                };
+                headerButtons.appendChild(loginBtn);
+
+                const regBtn = document.createElement('button');
+                regBtn.className = 'header-btn';
+                regBtn.textContent = 'Registrar-se';
+                regBtn.onclick = function() {
+                    window.location.href = '../Registro/registro.html';
+                };
+                headerButtons.appendChild(regBtn);
+            }
+        }
+
+        // Verifica se o usuário está logado ao carregar a página
+        document.addEventListener('DOMContentLoaded', function() {
+            atualizarHeader();
+            const user = localStorage.getItem('usuarioLogado');
+            if (user) {
+                document.getElementById('fichaMsg').textContent = '';
+            } else {
+                document.getElementById('fichaMsg').textContent = 'Faça login para criar uma ficha.';
+            }
+        });
+
+          function criarFicha() {
+            const user = localStorage.getItem('usuarioLogado');
+            if (user) {
+                window.location.href = '../Criacao_Ficha/Ficha_Pagina.html';
+            } else {
+                document.getElementById('fichaMsg').textContent = 'Você precisa estar logado para criar uma ficha!';
+            }
+        
+        }
+    </script>
+</body>
+</html>

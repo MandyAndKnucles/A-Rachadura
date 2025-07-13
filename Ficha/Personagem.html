@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Ficha do Personagem</title>
+    <style>
+        body {
+            background: url('../imagens/fundo_2.png') no-repeat center center fixed;
+            background-size: cover;
+            color: #181818;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .header-topo {
+            position: fixed;
+            top: 0; left: 0; width: 100vw;
+            height: 70px;
+            background: linear-gradient(90deg, #3a2067 60%, #4e2a8e 100%);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 100;
+            box-shadow: 0 2px 12px #0005;
+            padding: 0 38px;
+        }
+        .header-titulo {
+            font-size: 2.1rem;
+            font-weight: bold;
+            color: #fff;
+            letter-spacing: 2px;
+        }
+        .header-logo {
+            height: 54px;
+            width: auto;
+        }
+        .ficha-container {
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px #0001;
+            padding: 38px 60px;
+            min-width: 480px;
+            max-width: 98vw;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            border-left: 7px solid #a259ff;
+            margin-top: 110px;
+        }
+        .ficha-titulo {
+            font-size: 2.1rem;
+            font-weight: bold;
+            color: #181818;
+            margin-bottom: 10px;
+        }
+        .ficha-form {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        .ficha-label {
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #3a2067;
+        }
+        .ficha-input, .ficha-textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1.5px solid #a259ff;
+            font-size: 1.1rem;
+            background: #f6f4fa;
+            color: #181818;
+            margin-bottom: 2px;
+            resize: none;
+            transition: border 0.2s;
+        }
+        .ficha-input:focus, .ficha-textarea:focus {
+            outline: none;
+            border: 2px solid #3a2067;
+        }
+        .ficha-textarea {
+            min-height: 80px;
+            max-height: 220px;
+            font-family: inherit;
+        }
+        .voltar-btn {
+            margin-top: 10px;
+            padding: 10px 24px;
+            border-radius: 8px;
+            border: none;
+            background: #A259FF;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.2s;
+            align-self: flex-end;
+        }
+        .voltar-btn:hover { background: #7c3aed; }
+
+        /* Botão menu circular */
+        .menu-btn {
+            position: fixed;
+            bottom: 32px;
+            left: 32px;
+            width: 64px;
+            height: 64px;
+            background: #fff;
+            border-radius: 50%;
+            border: none;
+            box-shadow: 0 4px 18px #0007;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 200;
+            transition: transform 0.4s cubic-bezier(.68,-0.55,.27,1.55);
+        }
+        .menu-btn img {
+            width: 38px;
+            height: 38px;
+            pointer-events: none;
+            transition: transform 0.4s cubic-bezier(.68,-0.55,.27,1.55);
+        }
+        .menu-btn.girando {
+            transform: rotate(360deg);
+        }
+        /* Aba lateral animada */
+        .menu-sidebar {
+            position: fixed;
+            bottom: 32px;
+            left: 32px;
+            transform: translateX(-120%);
+            transition: transform 0.4s cubic-bezier(.68,-0.55,.27,1.55);
+            background: #fff;
+            border-radius: 40px 18px 18px 40px;
+            box-shadow: 0 4px 24px #0002;
+            padding: 28px 24px 28px 80px;
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+            min-width: 220px;
+            z-index: 199;
+        }
+        .menu-sidebar.aberta {
+            transform: translateX(0);
+        }
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: rgba(60,0,80,0.07);
+            border-radius: 12px;
+            padding: 10px 18px;
+            color: #181818;
+            font-size: 1.13rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            outline: none;
+            transition: background 0.18s;
+        }
+        .menu-item:hover {
+            background: rgba(162,89,255,0.18);
+        }
+        .menu-item img {
+            width: 28px;
+            height: 28px;
+        }
+        @media (max-width: 700px) {
+            .ficha-container { padding: 18px 2vw; min-width: unset;}
+            .header-topo { padding: 0 10px;}
+            .menu-sidebar { min-width: 140px; padding-left: 70px;}
+        }
+
+        .expand-box {
+            background: rgba(255,255,255,0.93);
+            border-radius: 14px;
+            box-shadow: 0 2px 12px #0002;
+            margin-top: 32px;
+            padding: 0;
+            overflow: hidden;
+            width: 100%;
+            max-width: 900px;
+            transition: box-shadow 0.2s;
+        }
+        .expand-header {
+            cursor: pointer;
+            padding: 18px 28px;
+            font-size: 1.25rem;
+            font-weight: bold;
+            background: #ede9f6;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1.5px solid #a259ff;
+            user-select: none;
+        }
+        .expand-content {
+            padding: 24px 28px 28px 28px;
+            animation: fadeIn 0.3s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+        .atributos-section {
+            margin-bottom: 32px;
+        }
+        .atributos-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 12px;
+            color: #3a2067;
+        }
+        .atributos-campos {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 22px;
+        }
+        .atributo-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+        .atributo-item label {
+            font-size: 1rem;
+            color: #3a2067;
+            font-weight: 500;
+        }
+        .atributo-input {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 2px solid #a259ff;
+            background: #f6f4fa;
+            color: #181818;
+            font-size: 1.2rem;
+            text-align: center;
+            font-weight: bold;
+            box-shadow: 0 1px 6px #0001;
+            transition: border 0.2s;
+        }
+        .atributo-input:focus {
+            border: 2.5px solid #3a2067;
+            outline: none;
+        }
+        .hab-section {
+            margin-top: 18px;
+        }
+        .hab-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 12px;
+            color: #3a2067;
+        }
+        .hab-new-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            margin-left: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .hab-new-btn img {
+            width: 32px;
+            height: 32px;
+        }
+        .hab-item {
+            background: #f6f4fa;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            padding: 12px 18px;
+            box-shadow: 0 1px 6px #0001;
+            transition: box-shadow 0.2s;
+            position: relative;
+        }
+        .hab-title-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            user-select: none;
+        }
+        .hab-title {
+            font-size: 1.08rem;
+            font-weight: bold;
+            color: #3a2067;
+        }
+        .hab-cat {
+            font-size: 0.95rem;
+            color: #a259ff;
+            margin-left: 12px;
+            font-weight: 500;
+        }
+        .hab-arrow-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin-left: 10px;
+            display: flex;
+            align-items: center;
+            transition: transform 0.25s;
+        }
+        .hab-arrow-btn img {
+            width: 22px;
+            height: 22px;
+            transition: transform 0.25s;
+        }
+        .hab-edit-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin-left: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .hab-edit-btn img {
+            width: 22px;
+            height: 22px;
+        }
+        .hab-trash-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin-left: 10px;
+            display: flex;
+            align-items: center;
+            transition: filter 0.18s;
+        }
+        .hab-trash-btn img {
+            width: 22px;
+            height: 22px;
+            filter: grayscale(0.6);
+        }
+        .hab-trash-btn:hover img {
+            filter: grayscale(1);
+        }
+        .hab-desc {
+            margin-top: 8px;
+            font-size: 1rem;
+            color: #181818;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s cubic-bezier(.68,-0.55,.27,1.55), opacity 0.25s;
+            opacity: 0;
+            padding-left: 4px;
+        }
+        .hab-desc.open {
+            max-height: 400px;
+            opacity: 1;
+            padding-top: 8px;
+        }
+        /* Pop-up */
+        .popup-bg {
+            position: fixed;
+            top:0; left:0; width:100vw; height:100vh;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .popup {
+            background: #fff;
+            padding: 32px 28px;
+            border-radius: 14px;
+            box-shadow: 0 4px 24px #0003;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            min-width: 320px;
+            color: #3a2067;
+        }
+        .popup label { font-weight: bold; }
+        .popup input, .popup textarea, .popup select {
+            width: 100%;
+            padding: 8px;
+            border-radius: 6px;
+            border: 1.5px solid #a259ff;
+            font-size: 1rem;
+            background: #f6f4fa;
+            color: #181818;
+            margin-bottom: 6px;
+            resize: none;
+            transition: border 0.2s;
+        }
+        .popup textarea { min-height: 60px; max-height: 200px; }
+        .popup-btns {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+        .popup-btn {
+            padding: 8px 18px;
+            border-radius: 6px;
+            border: none;
+            background: #A259FF;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .popup-btn.cancelar {
+            background: #f6f4fa;
+            color: #3a2067;
+            border: 1.5px solid #a259ff;
+        }
+        .popup .msg { color: #e53935; font-size: 0.98rem;}
+    </style>
+</head>
+<body>
+    <!-- Header decorativo -->
+    <div class="header-topo">
+        <span class="header-titulo">A Rachadura</span>
+        <img src="../imagens/logo.png" alt="Logo" class="header-logo">
+    </div>
+
+    <div class="ficha-container" id="fichaContainer">
+        <div class="ficha-titulo">Ficha do Personagem</div>
+        <form class="ficha-form" id="fichaForm" autocomplete="off">
+            <div>
+                <label class="ficha-label" for="nomeInput">Nome</label>
+                <input class="ficha-input" id="nomeInput" maxlength="32" required>
+            </div>
+            <div>
+                <label class="ficha-label" for="idadeInput">Idade</label>
+                <input class="ficha-input" id="idadeInput" type="number" min="1" max="999" required>
+            </div>
+            <div>
+                <label class="ficha-label" for="racaInput">Raça</label>
+                <input class="ficha-input" id="racaInput" maxlength="24" required>
+            </div>
+            <div>
+                <label class="ficha-label" for="historiaInput">História</label>
+                <textarea class="ficha-textarea" id="historiaInput" maxlength="1200" placeholder="Conte a história do personagem..."></textarea>
+            </div>
+        </form>
+        <button class="voltar-btn" onclick="window.location.href='../Criacao_Ficha/Ficha_Pagina.html'">Voltar</button>
+
+        <!-- Caixa expansível -->
+        <div class="expand-box" id="expandBox">
+            <div class="expand-header" onclick="toggleExpandBox()">
+                <span>Atributos, Especialidades e Habilidades</span>
+                <span id="expandArrow" style="font-size:1.5rem;transition:transform 0.3s;">&#9660;</span>
+            </div>
+            <div class="expand-content" id="expandContent" style="display:none;">
+                <!-- Atributos -->
+                <div class="atributos-section">
+                    <div class="atributos-title">Atributos</div>
+                    <div class="atributos-campos">
+                        <div class="atributo-item">
+                            <label for="atribMente">Mente</label>
+                            <input type="number" id="atribMente" class="atributo-input" min="-5" max="5">
+                        </div>
+                        <div class="atributo-item">
+                            <label for="atribAssimilacao">Assimilação</label>
+                            <input type="number" id="atribAssimilacao" class="atributo-input" min="-5" max="5">
+                        </div>
+                        <div class="atributo-item">
+                            <label for="atribLeveza">Leveza</label>
+                            <input type="number" id="atribLeveza" class="atributo-input" min="-5" max="5">
+                        </div>
+                        <div class="atributo-item">
+                            <label for="atribArcanismo">Arcanismo</label>
+                            <input type="number" id="atribArcanismo" class="atributo-input" min="-5" max="5">
+                        </div>
+                        <div class="atributo-item">
+                            <label for="atribFisico">Físico</label>
+                            <input type="number" id="atribFisico" class="atributo-input" min="-5" max="5">
+                        </div>
+                        <div class="atributo-item">
+                            <label for="atribEngenho">Engenho</label>
+                            <input type="number" id="atribEngenho" class="atributo-input" min="-5" max="5">
+                        </div>
+                    </div>
+                </div>
+                <!-- Especialidades e Habilidades -->
+                <div class="hab-section">
+                    <div class="hab-header">
+                        <span>Especialidades e Habilidades</span>
+                        <button class="hab-new-btn" onclick="abrirHabPopup()" type="button" title="Nova habilidade">
+                            <img src="../imagens/new.png" alt="Nova">
+                        </button>
+                    </div>
+                    <div id="habList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pop-up Nova/Editar Habilidade -->
+    <div id="habPopupBg" class="popup-bg" style="display:none;">
+        <div class="popup">
+            <label for="habNomeInput">Nome da habilidade</label>
+            <input id="habNomeInput" maxlength="40" style="margin-bottom:8px;">
+            <label for="habDescInput">Descrição</label>
+            <textarea id="habDescInput" maxlength="800" style="min-height:60px;max-height:200px;"></textarea>
+            <label for="habCategoriaInput">Categoria</label>
+            <select id="habCategoriaInput">
+                <option value="especialidade">Especialidade</option>
+                <option value="habilidade">Habilidade</option>
+                <option value="classe">Habilidade de Classe</option>
+                <option value="externo">Externo</option>
+            </select>
+            <div class="popup-btns" style="margin-top:10px;">
+                <button class="popup-btn" onclick="salvarHabPopup()">Salvar</button>
+                <button class="popup-btn cancelar" onclick="fecharHabPopup()">Cancelar</button>
+            </div>
+            <div class="msg" id="habPopupMsg"></div>
+        </div>
+    </div>
+
+    <!-- Botão menu circular -->
+    <button class="menu-btn" id="menuBtn" title="Menu">
+        <img src="../imagens/menu.png" alt="Menu">
+    </button>
+    <!-- Aba lateral do menu -->
+    <div class="menu-sidebar" id="menuSidebar">
+        <div class="menu-item" onclick="irPara('estatisticas')">
+            <img src="../imagens/est.png" alt="Estatísticas">
+            Estatísticas
+        </div>
+        <div class="menu-item" onclick="irPara('skills')">
+            <img src="../imagens/skill.png" alt="Skills">
+            Skills
+        </div>
+        <div class="menu-item" onclick="irPara('inventario')">
+            <img src="../imagens/inv.png" alt="Inventário">
+            Inventário
+        </div>
+        <div class="menu-item" onclick="irPara('combate')">
+            <img src="../imagens/Combate.png" alt="Combate">
+            Combate
+        </div>
+        <div class="menu-item" onclick="irPara('calculadora')">
+            <img src="../imagens/Calc.png" alt="Calculadora">
+            Calculadora
+        </div>
+    </div>
+    <script>
+        // Utilidade para pegar parâmetro da URL
+        function getQueryParam(nome) {
+            const url = new URL(window.location.href);
+            return url.searchParams.get(nome);
+        }
+
+        // Funções de armazenamento
+        function getUsuarioLogado() {
+            return localStorage.getItem('usuarioLogado');
+        }
+        function getFichasUsuario() {
+            const usuario = getUsuarioLogado();
+            if (!usuario) return [];
+            let fichas = JSON.parse(localStorage.getItem('fichas_' + usuario) || '[]');
+            return fichas;
+        }
+        function setFichasUsuario(fichas) {
+            const usuario = getUsuarioLogado();
+            if (!usuario) return;
+            localStorage.setItem('fichas_' + usuario, JSON.stringify(fichas));
+        }
+
+        // Exibir e editar ficha selecionada
+        let idxFicha = null;
+        function mostrarFicha() {
+            idxFicha = parseInt(getQueryParam('ficha'));
+            const fichas = getFichasUsuario();
+            if (isNaN(idxFicha) || !fichas[idxFicha]) {
+                document.getElementById('fichaForm').innerHTML = '<span style="color:#ffb347;">Ficha não encontrada.</span>';
+                return;
+            }
+            const ficha = fichas[idxFicha];
+            document.getElementById('nomeInput').value = ficha.nome || '';
+            document.getElementById('idadeInput').value = ficha.idade || '';
+            document.getElementById('racaInput').value = ficha.raca || '';
+            document.getElementById('historiaInput').value = ficha.historia || '';
+        }
+
+        // Salvar alterações em tempo real
+        function salvarFicha() {
+            const fichas = getFichasUsuario();
+            if (isNaN(idxFicha) || !fichas[idxFicha]) return;
+            fichas[idxFicha].nome = document.getElementById('nomeInput').value.trim();
+            fichas[idxFicha].idade = document.getElementById('idadeInput').value.trim();
+            fichas[idxFicha].raca = document.getElementById('racaInput').value.trim();
+            fichas[idxFicha].historia = document.getElementById('historiaInput').value.trim();
+            setFichasUsuario(fichas);
+        }
+
+        // Eventos para salvar ao digitar
+        window.onload = function() {
+            if (!getUsuarioLogado()) {
+                window.location.href = '../Registro/login.html';
+                return;
+            }
+            mostrarFicha();
+            ['nomeInput','idadeInput','racaInput','historiaInput'].forEach(id => {
+                document.getElementById(id).addEventListener('input', salvarFicha);
+            });
+        }
+
+        // Menu lateral animado
+        const menuBtn = document.getElementById('menuBtn');
+        const menuSidebar = document.getElementById('menuSidebar');
+        let menuAberto = false;
+
+        menuBtn.addEventListener('click', function() {
+            menuAberto = !menuAberto;
+            menuSidebar.classList.toggle('aberta', menuAberto);
+            menuBtn.classList.add('girando');
+            setTimeout(() => menuBtn.classList.remove('girando'), 400);
+        });
+
+        // Fecha menu ao clicar fora
+        document.addEventListener('click', function(e) {
+            if (
+                menuAberto &&
+                !menuSidebar.contains(e.target) &&
+                !menuBtn.contains(e.target)
+            ) {
+                menuSidebar.classList.remove('aberta');
+                menuAberto = false;
+            }
+        });
+
+        // Redirecionamento dos botões do menu
+        function irPara(destino) {
+            const idx = getQueryParam('ficha');
+            let rota = '';
+            switch(destino) {
+                case 'estatisticas': rota = `estatisticas.html?ficha=${idx}`; break;
+                case 'skills': rota = `skills.html?ficha=${idx}`; break;
+                case 'inventario': rota = `inventario.html?ficha=${idx}`; break;
+                case 'combate': rota = `combate.html?ficha=${idx}`; break;
+                case 'calculadora': rota = `calculadora.html?ficha=${idx}`; break;
+                default: return;
+            }
+            window.location.href = rota;
+        }
+
+        // Expansão da caixa
+        function toggleExpandBox() {
+            const content = document.getElementById('expandContent');
+            const arrow = document.getElementById('expandArrow');
+            if (content.style.display === 'none' || !content.style.display) {
+                content.style.display = 'block';
+                arrow.style.transform = 'rotate(180deg)';
+                carregarAtributos();
+                renderHabList();
+            } else {
+                content.style.display = 'none';
+                arrow.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // --- Atributos ---
+        function carregarAtributos() {
+            const fichas = getFichasUsuario();
+            if (isNaN(idxFicha) || !fichas[idxFicha]) return;
+            const ficha = fichas[idxFicha];
+            const atr = ficha.atributos || { mente: 0, assimilacao: 0, leveza: 0, arcanismo: 0, fisico: 0, engenho: 0 };
+            document.getElementById('atribMente').value = atr.mente ?? 0;
+            document.getElementById('atribAssimilacao').value = atr.assimilacao ?? 0;
+            document.getElementById('atribLeveza').value = atr.leveza ?? 0;
+            document.getElementById('atribArcanismo').value = atr.arcanismo ?? 0;
+            document.getElementById('atribFisico').value = atr.fisico ?? 0;
+            document.getElementById('atribEngenho').value = atr.engenho ?? 0;
+        }
+        function salvarAtributos() {
+            const fichas = getFichasUsuario();
+            if (isNaN(idxFicha) || !fichas[idxFicha]) return;
+            fichas[idxFicha].atributos = {
+                mente: limitarAtributo(document.getElementById('atribMente').value),
+                assimilacao: limitarAtributo(document.getElementById('atribAssimilacao').value),
+                leveza: limitarAtributo(document.getElementById('atribLeveza').value),
+                arcanismo: limitarAtributo(document.getElementById('atribArcanismo').value),
+                fisico: limitarAtributo(document.getElementById('atribFisico').value),
+                engenho: limitarAtributo(document.getElementById('atribEngenho').value)
+            };
+            setFichasUsuario(fichas);
+        }
+        function limitarAtributo(val) {
+            val = parseInt(val) || 0;
+            if (val > 5) return 5;
+            if (val < -5) return -5;
+            return val;
+        }
+
+        // --- Especialidades e Habilidades ---
+        let habEditIdx = null;
+        function renderHabList() {
+            const fichas = getFichasUsuario();
+            if (isNaN(idxFicha) || !fichas[idxFicha]) return;
+            const habs = fichas[idxFicha].habilidades || [];
+            const habList = document.getElementById('habList');
+            habList.innerHTML = '';
+            habs.forEach((hab, i) => {
+                habList.innerHTML += `
+                    <div class="hab-item">
+                        <div class="hab-title-row" onclick="toggleHabDesc(${i})">
+                            <span class="hab-title">${hab.nome}</span>
+                            <span class="hab-cat">(${categoriaLabel(hab.categoria)})</span>
+                            <button class="hab-arrow-btn" id="habArrow${i}" type="button">
+                                <img src="../imagens/Arrow.png" alt="Abrir">
+                            </button>
+                            <button class="hab-edit-btn" type="button" onclick="event.stopPropagation(); editarHab(${i});">
+                                <img src="../imagens/edit.png" alt="Editar">
+                            </button>
+                            <button class="hab-trash-btn" type="button" onclick="event.stopPropagation(); deletarHab(${i});" title="Deletar">
+                                <img src="../imagens/trash.png" alt="Deletar">
+                            </button>
+                        </div>
+                        <div class="hab-desc" id="habDesc${i}">${hab.descricao.replace(/\n/g, '<br>')}</div>
+                    </div>
+                `;
+            });
+        }
+        function categoriaLabel(cat) {
+            switch(cat) {
+                case 'especialidade': return 'Especialidade';
+                case 'habilidade': return 'Habilidade';
+                case 'classe': return 'Habilidade de Classe';
+                case 'externo': return 'Externo';
+                default: return '';
+            }
+        }
+        function toggleHabDesc(idx) {
+            const desc = document.getElementById('habDesc'+idx);
+            const arrow = document.getElementById('habArrow'+idx).querySelector('img');
+            if (desc.classList.contains('open')) {
+                desc.classList.remove('open');
+                arrow.style.transform = 'rotate(0deg)';
+            } else {
+                desc.classList.add('open');
+                arrow.style.transform = 'rotate(90deg)';
+            }
+        }
+        function abrirHabPopup(editIdx = null) {
+            habEditIdx = editIdx;
+            document.getElementById('habPopupBg').style.display = 'flex';
+            document.getElementById('habPopupMsg').textContent = '';
+            if (editIdx !== null) {
+                const fichas = getFichasUsuario();
+                const hab = fichas[idxFicha].habilidades[editIdx];
+                document.getElementById('habNomeInput').value = hab.nome;
+                document.getElementById('habDescInput').value = hab.descricao;
+                document.getElementById('habCategoriaInput').value = hab.categoria;
+            } else {
+                document.getElementById('habNomeInput').value = '';
+                document.getElementById('habDescInput').value = '';
+                document.getElementById('habCategoriaInput').value = 'especialidade';
+            }
+        }
+        function fecharHabPopup() {
+            document.getElementById('habPopupBg').style.display = 'none';
+        }
+        function salvarHabPopup() {
+            const nome = document.getElementById('habNomeInput').value.trim();
+            const desc = document.getElementById('habDescInput').value.trim();
+            const cat = document.getElementById('habCategoriaInput').value;
+            if (!nome || !desc || !cat) {
+                document.getElementById('habPopupMsg').textContent = 'Preencha todos os campos.';
+                return;
+            }
+            const fichas = getFichasUsuario();
+            if (isNaN(idxFicha) || !fichas[idxFicha]) return;
+            if (!fichas[idxFicha].habilidades) fichas[idxFicha].habilidades = [];
+            if (habEditIdx !== null) {
+                fichas[idxFicha].habilidades[habEditIdx] = { nome, descricao: desc, categoria: cat };
+            } else {
+                fichas[idxFicha].habilidades.push({ nome, descricao: desc, categoria: cat });
+            }
+            setFichasUsuario(fichas);
+            fecharHabPopup();
+            renderHabList();
+        }
+        function editarHab(idx) {
+            abrirHabPopup(idx);
+        }
+        function deletarHab(idx) {
+            if (!confirm('Deseja realmente deletar esta habilidade?')) return;
+            const fichas = getFichasUsuario();
+            if (isNaN(idxFicha) || !fichas[idxFicha]) return;
+            fichas[idxFicha].habilidades.splice(idx, 1);
+            setFichasUsuario(fichas);
+            renderHabList();
+        }
+
+        // Eventos para atributos
+        ['atribMente','atribAssimilacao','atribLeveza','atribArcanismo','atribFisico','atribEngenho'].forEach(id => {
+            document.addEventListener('DOMContentLoaded', function() {
+                const el = document.getElementById(id);
+                if (el) el.addEventListener('input', salvarAtributos);
+            });
+        });
+
+        // Inicialização extra
+        window.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                carregarAtributos();
+                renderHabList();
+            }, 100);
+        });
+    </script>
+</body>
+</html>

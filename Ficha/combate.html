@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Combate</title>
+    <style>
+        body {
+            background: url('../imagens/fundo_2.png') no-repeat center center fixed;
+            background-size: cover;
+            color: #181818;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .header-topo {
+            position: fixed;
+            top: 0; left: 0; width: 100vw;
+            height: 70px;
+            background: linear-gradient(90deg, #3a2067 60%, #4e2a8e 100%);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 100;
+            box-shadow: 0 2px 12px #0005;
+            padding: 0 38px;
+        }
+        .header-titulo {
+            font-size: 2.1rem;
+            font-weight: bold;
+            color: #fff;
+            letter-spacing: 2px;
+        }
+        .header-logo {
+            height: 54px;
+            width: auto;
+        }
+        .combate-container {
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px #0001;
+            padding: 32px 32px;
+            min-width: 420px;
+            max-width: 98vw;
+            display: flex;
+            flex-direction: row;
+            gap: 36px;
+            border-left: 7px solid #a259ff;
+            margin-top: 110px;
+            align-items: flex-start;
+        }
+        .combate-main {
+            flex: 1 1 340px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        .combate-titulo {
+            font-size: 2.1rem;
+            font-weight: bold;
+            color: #181818;
+            margin-bottom: 10px;
+        }
+        .barras-section {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        .barras-superior {
+            display: flex;
+            flex-direction: row;
+            gap: 18px;
+        }
+        .barra-box {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            position: relative;
+            min-width: 180px;
+            max-width: 220px;
+        }
+        .barra-label {
+            font-weight: 600;
+            color: #3a2067;
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+        .barra-label img {
+            width: 22px;
+            height: 22px;
+            vertical-align: middle;
+        }
+        .barra-externa {
+            width: 100%;
+            height: 22px;
+            background: #f6f4fa;
+            border-radius: 12px;
+            box-shadow: 0 1px 6px #0001;
+            overflow: hidden;
+            position: relative;
+        }
+        .barra-interna {
+            height: 100%;
+            border-radius: 12px;
+            transition: width 0.4s cubic-bezier(.68,-0.55,.27,1.55);
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            font-weight: bold;
+            font-size: 1rem;
+            color: #fff;
+            padding-right: 10px;
+            letter-spacing: 1px;
+        }
+        .pv {
+            background: linear-gradient(90deg, #ff5e62 60%, #ff9966 100%);
+            box-shadow: 0 2px 8px #ff5e6233;
+        }
+        .mana {
+            background: linear-gradient(90deg, #3a8dde 60%, #6dd5ed 100%);
+            box-shadow: 0 2px 8px #3a8dde33;
+        }
+        .pd {
+            background: linear-gradient(90deg, #a259ff 60%, #6e48aa 100%);
+            box-shadow: 0 2px 8px #a259ff33;
+        }
+        .barra-inputs {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .barra-input {
+            width: 38px;
+            padding: 4px 6px;
+            border-radius: 6px;
+            border: 1.5px solid #a259ff;
+            font-size: 0.98rem;
+            background: #f6f4fa;
+            color: #181818;
+            margin-bottom: 2px;
+            text-align: center;
+            transition: border 0.2s;
+        }
+        .barra-input:focus {
+            outline: none;
+            border: 2px solid #3a2067;
+        }
+        .barra-btn {
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: none;
+            background: #A259FF;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: background 0.2s;
+        }
+        .barra-btn:hover { background: #7c3aed; }
+        .valor-fantasma {
+            position: absolute;
+            right: 24px;
+            top: -28px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #fff;
+            background: rgba(30,30,30,0.85);
+            padding: 4px 16px;
+            border-radius: 16px;
+            opacity: 0;
+            pointer-events: none;
+            animation: fadeOut 1.2s forwards;
+        }
+        @keyframes fadeOut {
+            0% { opacity: 1; transform: translateY(0); }
+            80% { opacity: 1; transform: translateY(-8px); }
+            100% { opacity: 0; transform: translateY(-18px); }
+        }
+        .nivel-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .nivel-label {
+            font-weight: 600;
+            color: #3a2067;
+        }
+        .nivel-input {
+            width: 38px;
+            padding: 4px 6px;
+            border-radius: 6px;
+            border: 1.5px solid #a259ff;
+            font-size: 0.98rem;
+            background: #f6f4fa;
+            color: #181818;
+            text-align: center;
+            transition: border 0.2s;
+        }
+        .nivel-input:focus {
+            outline: none;
+            border: 2px solid #3a2067;
+        }
+        @media (max-width: 900px) {
+            .combate-container { flex-direction: column; gap: 24px; }
+        }
+        @media (max-width: 700px) {
+            .combate-container { padding: 12px 2vw; min-width: unset; flex-direction: column; gap: 18px;}
+            .header-topo { padding: 0 10px;}
+            .barras-superior { flex-direction: column; gap: 10px; }
+        }
+        /* Botão menu circular */
+        .menu-btn {
+            position: fixed;
+            bottom: 32px;
+            left: 32px;
+            width: 64px;
+            height: 64px;
+            background: #fff;
+            border-radius: 50%;
+            border: none;
+            box-shadow: 0 4px 18px #0007;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 200;
+            transition: transform 0.4s cubic-bezier(.68,-0.55,.27,1.55);
+        }
+        .menu-btn img {
+            width: 38px;
+            height: 38px;
+            pointer-events: none;
+            transition: transform 0.4s cubic-bezier(.68,-0.55,.27,1.55);
+        }
+        .menu-btn.girando {
+            transform: rotate(360deg);
+        }
+        /* Aba lateral animada */
+        .menu-sidebar {
+            position: fixed;
+            bottom: 32px;
+            left: 32px;
+            transform: translateX(-120%);
+            transition: transform 0.4s cubic-bezier(.68,-0.55,.27,1.55);
+            background: #fff;
+            border-radius: 40px 18px 18px 40px;
+            box-shadow: 0 4px 24px #0002;
+            padding: 28px 24px 28px 80px;
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+            min-width: 220px;
+            z-index: 199;
+        }
+        .menu-sidebar.aberta {
+            transform: translateX(0);
+        }
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: rgba(60,0,80,0.07);
+            border-radius: 12px;
+            padding: 10px 18px;
+            color: #181818;
+            font-size: 1.13rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            outline: none;
+            transition: background 0.18s;
+        }
+        .menu-item:hover {
+            background: rgba(162,89,255,0.18);
+        }
+        .menu-item img {
+            width: 28px;
+            height: 28px;
+        }
+        @media (max-width: 700px) {
+            .menu-sidebar { min-width: 140px; padding-left: 70px;}
+        }
+    </style>
+</head>
+<body>
+    <!-- Header decorativo -->
+    <div class="header-topo">
+        <span class="header-titulo">A Rachadura</span>
+        <img src="../imagens/logo.png" alt="Logo" class="header-logo">
+    </div>
+    <div class="combate-container">
+        <div class="combate-main">
+            <div class="combate-titulo">Combate</div>
+            <div class="nivel-box">
+                <span class="nivel-label">Nível</span>
+                <input class="nivel-input" id="nivelInput" type="number" min="1" max="999" value="1" onchange="salvarNivel()">
+            </div>
+            <div class="barras-section">
+                <div class="barras-superior">
+                    <!-- PV -->
+                    <div class="barra-box" id="pvBox">
+                        <span class="barra-label"><img src="../imagens/pv.png" alt="PV">PV</span>
+                        <div class="barra-externa">
+                            <div class="barra-interna pv" id="pvBar">0/0</div>
+                        </div>
+                        <div class="barra-inputs">
+                            <input class="barra-input" id="pvAtual" type="number" min="0" max="999" value="0">/
+                            <input class="barra-input" id="pvMax" type="number" min="1" max="999" value="0">
+                            <button class="pv-add-btn" id="pvAddBtn" type="button" style="background:none;border:none;padding:0;margin-left:8px;cursor:pointer;vertical-align:middle;">
+                                <img src="../imagens/add.png" alt="Adicionar" style="width:28px;height:28px;">
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Mana -->
+                    <div class="barra-box" id="manaBox">
+                        <span class="barra-label"><img src="../imagens/mana.png" alt="Mana">Mana</span>
+                        <div class="barra-externa">
+                            <div class="barra-interna mana" id="manaBar">0/0</div>
+                        </div>
+                        <div class="barra-inputs">
+                            <input class="barra-input" id="manaAtual" type="number" min="0" max="999" value="0">/
+                            <input class="barra-input" id="manaMax" type="number" min="1" max="999" value="0">
+                            <button class="barra-btn" onclick="modificarValor('mana', -1)" type="button">-</button>
+                            <button class="barra-btn" onclick="modificarValor('mana', 1)" type="button">+</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- PD -->
+                <div class="barra-box" id="pdBox">
+                    <span class="barra-label">PD (Pontos de Determinação)</span>
+                    <div class="barra-externa">
+                        <div class="barra-interna pd" id="pdBar">0/0</div>
+                    </div>
+                    <div class="barra-inputs">
+                        <input class="barra-input" id="pdAtual" type="number" min="0" max="999" value="0">/
+                        <input class="barra-input" id="pdMax" type="number" min="1" max="999" value="0">
+                        <button class="barra-btn" onclick="modificarValor('pd', -1)" type="button">-</button>
+                        <button class="barra-btn" onclick="modificarValor('pd', 1)" type="button">+</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Informações Lateral -->
+        <div class="info-lateral" style="min-width:260px;max-width:320px;width:100%;margin-left:18px;">
+            <div class="info-header" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;background:#f6f4fa;border-radius:10px 10px 0 0;padding:12px 18px 12px 18px;font-weight:bold;font-size:1.13rem;color:#3a2067;user-select:none;" onclick="toggleInfoBox()">
+                <span>Informações</span>
+                <img id="infoArrow" src="../imagens/arrow.png" alt="Expandir" style="width:22px;height:22px;transition:transform 0.3s;">
+            </div>
+            <div id="infoContent" style="display:none;background:#fff;border-radius:0 0 10px 10px;box-shadow:0 2px 12px #0001;padding:0 0 12px 0;">
+                <div class="info-section" style="border-bottom:1px solid #eee;">
+                    <div class="info-section-header" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;padding:10px 18px;font-weight:500;color:#3a2067;user-select:none;" onclick="toggleSubInfo('atributos')">
+                        <span>Atributos</span>
+                        <img id="atributosArrow" src="../imagens/arrow.png" alt="Expandir" style="width:18px;height:18px;transition:transform 0.3s;">
+                    </div>
+                    <div id="atributosContent" style="display:none;padding:0 18px 10px 18px;">
+                        <div id="atributosRapidos" style="display:flex;flex-wrap:wrap;gap:10px 18px;font-size:0.98rem;color:#3a2067;"></div>
+                    </div>
+                </div>
+                <div class="info-section" style="border-bottom:1px solid #eee;">
+                    <div class="info-section-header" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;padding:10px 18px;font-weight:500;color:#3a2067;user-select:none;" onclick="toggleSubInfo('estatisticas')">
+                        <span>Estatísticas</span>
+                        <img id="estatisticasArrow" src="../imagens/arrow.png" alt="Expandir" style="width:18px;height:18px;transition:transform 0.3s;">
+                    </div>
+                    <div id="estatisticasContent" style="display:none;padding:0 18px 10px 18px;">
+                        <div id="estatisticasRapidas" style="display:flex;flex-direction:column;gap:7px;font-size:0.98rem;color:#3a2067;"></div>
+                    </div>
+                </div>
+                <div class="info-section">
+                    <div class="info-section-header" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;padding:10px 18px;font-weight:500;color:#3a2067;user-select:none;" onclick="toggleSubInfo('resistencias')">
+                        <span>Resistências</span>
+                        <img id="resistenciasArrow" src="../imagens/arrow.png" alt="Expandir" style="width:18px;height:18px;transition:transform 0.3s;">
+                    </div>
+                    <div id="resistenciasContent" style="display:none;padding:0 18px 10px 18px;">
+                        <div style="display:flex;align-items:center;gap:10px 12px;margin-bottom:7px;">
+                            <span style="font-weight:500;">Tenacidade</span>
+                            <input id="tenacidadeInput" type="number" min="0" max="100" value="0" style="width:38px;padding:4px 6px;border-radius:6px;border:1.5px solid #a259ff;font-size:0.98rem;background:#f6f4fa;color:#181818;text-align:center;">
+                            <span style="font-size:0.97rem;">%</span>
+                        </div>
+                        <div style="display:flex;flex-wrap:wrap;gap:7px 14px;font-size:0.98rem;">
+                            <div style="display:flex;align-items:center;gap:5px;"><span>Corte</span><input id="resCorte" type="number" style="width:38px;padding:2px 4px;border-radius:6px;border:1.2px solid #a259ff;font-size:0.97rem;background:#f6f4fa;color:#181818;text-align:center;"></div>
+                            <div style="display:flex;align-items:center;gap:5px;"><span>Perfuração</span><input id="resPerf" type="number" style="width:38px;padding:2px 4px;border-radius:6px;border:1.2px solid #a259ff;font-size:0.97rem;background:#f6f4fa;color:#181818;text-align:center;"></div>
+                            <div style="display:flex;align-items:center;gap:5px;"><span>Impacto</span><input id="resImpacto" type="number" style="width:38px;padding:2px 4px;border-radius:6px;border:1.2px solid #a259ff;font-size:0.97rem;background:#f6f4fa;color:#181818;text-align:center;"></div>
+                            <div style="display:flex;align-items:center;gap:5px;"><span>Retaliação</span><input id="resRetal" type="number" style="width:38px;padding:2px 4px;border-radius:6px;border:1.2px solid #a259ff;font-size:0.97rem;background:#f6f4fa;color:#181818;text-align:center;"></div>
+                            <div style="display:flex;align-items:center;gap:5px;"><span>Maligno</span><input id="resMaligno" type="number" style="width:38px;padding:2px 4px;border-radius:6px;border:1.2px solid #a259ff;font-size:0.97rem;background:#f6f4fa;color:#181818;text-align:center;"></div>
+                            <div style="display:flex;align-items:center;gap:5px;"><span>Espiritual</span><input id="resEspiritual" type="number" style="width:38px;padding:2px 4px;border-radius:6px;border:1.2px solid #a259ff;font-size:0.97rem;background:#f6f4fa;color:#181818;text-align:center;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Botão menu circular -->
+    <button class="menu-btn" id="menuBtn" title="Menu">
+        <img src="../imagens/menu.png" alt="Menu">
+    </button>
+    <!-- Aba lateral do menu -->
+    <div class="menu-sidebar" id="menuSidebar">
+        <div class="menu-item" onclick="irPara('estatisticas')">
+            <img src="../imagens/est.png" alt="Estatísticas">
+            Estatísticas
+        </div>
+        <div class="menu-item" onclick="irPara('skills')">
+            <img src="../imagens/skill.png" alt="Skills">
+            Skills
+        </div>
+        <div class="menu-item" onclick="irPara('inventario')">
+            <img src="../imagens/inv.png" alt="Inventário">
+            Inventário
+        </div>
+        <div class="menu-item" onclick="irPara('combate')">
+            <img src="../imagens/Combate.png" alt="Combate">
+            Combate
+        </div>
+        <div class="menu-item" onclick="irPara('calculadora')">
+            <img src="../imagens/Calc.png" alt="Calculadora">
+            Calculadora
+        </div>
+    </div>
+    <script>
+        // Utilidade para pegar parâmetro da URL
+        function getQueryParam(nome) {
+            const url = new URL(window.location.href);
+            return url.searchParams.get(nome);
+        }
+        // Funções de armazenamento
+        function getUsuarioLogado() {
+            return localStorage.getItem('usuarioLogado');
+        }
+        function getFichasUsuario() {
+            const usuario = getUsuarioLogado();
+            if (!usuario) return [];
+            let fichas = JSON.parse(localStorage.getItem('fichas_' + usuario) || '[]');
+            return fichas;
+        }
+        function setFichasUsuario(fichas) {
+            const usuario = getUsuarioLogado();
+            if (!usuario) return;
+            localStorage.setItem('fichas_' + usuario, JSON.stringify(fichas));
+        }
+        // Redirecionamento dos botões do menu
+        function irPara(destino) {
+            const idx = getQueryParam('ficha');
+            let rota = '';
+            switch(destino) {
+                case 'estatisticas': rota = `estatisticas.html?ficha=${idx}`; break;
+                case 'skills': rota = `skills.html?ficha=${idx}`; break;
+                case 'inventario': rota = `inventario.html?ficha=${idx}`; break;
+                case 'combate': rota = `combate.html?ficha=${idx}`; break;
+                case 'calculadora': rota = `calculadora.html?ficha=${idx}`; break;
+                default: return;
+            }
+            window.location.href = rota;
+        }
+        // Menu lateral animado
+        const menuBtn = document.getElementById('menuBtn');
+        const menuSidebar = document.getElementById('menuSidebar');
+        let menuAberto = false;
+        menuBtn.addEventListener('click', function() {
+            menuAberto = !menuAberto;
+            menuSidebar.classList.toggle('aberta', menuAberto);
+            menuBtn.classList.add('girando');
+            setTimeout(() => menuBtn.classList.remove('girando'), 400);
+        });
+        document.addEventListener('click', function(e) {
+            if (
+                menuAberto &&
+                !menuSidebar.contains(e.target) &&
+                !menuBtn.contains(e.target)
+            ) {
+                menuSidebar.classList.remove('aberta');
+                menuAberto = false;
+            }
+        });
+        // --- Sistema de barras e informações ---
+        let idxFicha = null;
+        let ficha = null;
+        function mostrarBarras() {
+            idxFicha = parseInt(getQueryParam('ficha'));
+            const fichas = getFichasUsuario();
+            if (isNaN(idxFicha) || !fichas[idxFicha]) return;
+            ficha = fichas[idxFicha];
+            setBarra('pv', ficha.pvAtual ?? ficha.pvMax ?? 0, ficha.pvMax ?? 0);
+            setBarra('mana', ficha.manaAtual ?? ficha.manaMax ?? 0, ficha.manaMax ?? 0);
+            setBarra('pd', ficha.pdAtual ?? ficha.pdMax ?? 0, ficha.pdMax ?? 0);
+            document.getElementById('nivelInput').value = ficha.nivel ?? 1;
+            carregarAtributosRapidos();
+            carregarEstatisticasRapidas();
+            carregarResistencias();
+        }
+        function setBarra(tipo, atual, max) {
+            // Para PV, permitir exceder o máximo visualmente
+            if (tipo === 'pv') {
+                atual = Math.max(0, atual); // não limita ao máximo
+                document.getElementById(tipo+'Atual').value = atual;
+                document.getElementById(tipo+'Max').value = max;
+                const bar = document.getElementById(tipo+'Bar');
+                bar.textContent = `${atual}/${max}`;
+                // Barra pode passar de 100% se vida excedida
+                let percent = max > 0 ? (100 * atual / max) : 0;
+                bar.style.width = percent + '%';
+                // Se excedido, cor diferente
+                if (atual > max) {
+                    bar.style.background = 'linear-gradient(90deg, #ff5e62 60%, #ff9966 100%, #00e676 100%)';
+                    bar.style.boxShadow = '0 2px 8px #00e67699';
+                } else {
+                    bar.style.background = '';
+                    bar.classList.add('pv'); // garante classe
+                    bar.style.boxShadow = '';
+                }
+            } else {
+                atual = Math.max(0, Math.min(atual, max));
+                document.getElementById(tipo+'Atual').value = atual;
+                document.getElementById(tipo+'Max').value = max;
+                const bar = document.getElementById(tipo+'Bar');
+                bar.textContent = `${atual}/${max}`;
+                bar.style.width = max > 0 ? (100 * atual / max) + '%' : '0%';
+            }
+        }
+        // Salva automaticamente ao alterar PV, Mana e PD
+        function autoSalvarBarra(tipo) {
+            const atual = parseInt(document.getElementById(tipo+'Atual').value) || 0;
+            const max = parseInt(document.getElementById(tipo+'Max').value) || 0;
+            if (max < 1) return;
+            setBarra(tipo, atual, max);
+            salvarBarra(tipo, atual, max);
+        }
+        function salvarBarra(tipo, atual, max) {
+            const fichas = getFichasUsuario();
+            if (isNaN(idxFicha) || !fichas[idxFicha]) return;
+            fichas[idxFicha][tipo+'Atual'] = atual;
+            fichas[idxFicha][tipo+'Max'] = max;
+            setFichasUsuario(fichas);
+        }
+        // Removido modificarValor para PV (botões removidos)
+        function modificarValor(tipo, delta) {
+            if (tipo === 'pv') return; // Não faz nada para PV
+            const atual = parseInt(document.getElementById(tipo+'Atual').value) || 0;
+            const max = parseInt(document.getElementById(tipo+'Max').value) || 0;
+            let novo = atual + delta;
+            if (novo < 0) novo = 0;
+            if (novo > max) novo = max;
+            if (novo !== atual) {
+                setBarra(tipo, novo, max);
+                salvarBarra(tipo, novo, max);
+                mostrarFantasma(tipo, delta > 0 ? '+'+Math.abs(delta) : '-'+Math.abs(delta));
+            }
+        }
+        // --- POPUP DE DANO/CURA PV ---
+        // Criação do popup
+        function criarPopupPV() {
+            if (document.getElementById('popupPV')) return;
+            const popup = document.createElement('div');
+            popup.id = 'popupPV';
+            popup.style.position = 'fixed';
+            popup.style.top = '0';
+            popup.style.left = '0';
+            popup.style.width = '100vw';
+            popup.style.height = '100vh';
+            popup.style.background = 'rgba(0,0,0,0.35)';
+            popup.style.display = 'flex';
+            popup.style.alignItems = 'center';
+            popup.style.justifyContent = 'center';
+            popup.style.zIndex = '9999';
+            popup.innerHTML = `
+                <div id="popupPVBox" style="background:#fff;padding:32px 28px 22px 28px;border-radius:18px;box-shadow:0 4px 32px #0005;min-width:320px;max-width:95vw;display:flex;flex-direction:column;gap:18px;align-items:center;">
+                    <div style="font-size:1.25rem;font-weight:bold;color:#3a2067;">PV: Dano ou Cura</div>
+                    <div id="popupPVContent"></div>
+                    <div style="display:flex;gap:18px;justify-content:center;">
+                        <button id="popupPVCancelar" style="padding:7px 18px;border-radius:8px;border:none;background:#eee;color:#3a2067;font-weight:bold;cursor:pointer;">Cancelar</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(popup);
+            document.getElementById('popupPVCancelar').onclick = () => popup.remove();
+            popupFluxoEtapa1();
+        }
+
+        // Etapa 1: Dano ou Cura
+        function popupFluxoEtapa1() {
+            const content = document.getElementById('popupPVContent');
+            content.innerHTML = `
+                <div style="display:flex;gap:18px;justify-content:center;">
+                    <button id="popupPVDano" style="padding:10px 24px;border-radius:8px;border:none;background:#ff5e62;color:#fff;font-weight:bold;cursor:pointer;">Dano</button>
+                    <button id="popupPVCura" style="padding:10px 24px;border-radius:8px;border:none;background:#3a8dde;color:#fff;font-weight:bold;cursor:pointer;">Cura</button>
+                </div>
+            `;
+            document.getElementById('popupPVDano').onclick = popupFluxoDano;
+            document.getElementById('popupPVCura').onclick = popupFluxoCura;
+        }
+
+        // Etapa Dano
+        function popupFluxoDano() {
+            const content = document.getElementById('popupPVContent');
+            content.innerHTML = `
+                <div style="margin-bottom:10px;">Dano recebido <span style='color:#ff5e62;font-weight:bold;'>*</span></div>
+                <input id="popupPVDanoValor" type="number" min="1" style="width:80px;padding:6px 8px;border-radius:6px;border:1.5px solid #a259ff;font-size:1.1rem;text-align:center;">
+                <div style="margin-top:12px;">Espécie de Dano</div>
+                <div style="display:flex;gap:12px;margin-bottom:10px;">
+                    <button id="popupPVDanoFisico" style="padding:7px 18px;border-radius:8px;border:none;background:#a259ff;color:#fff;font-weight:bold;cursor:pointer;">Físico</button>
+                    <button id="popupPVDanoEspecial" style="padding:7px 18px;border-radius:8px;border:none;background:#6dd5ed;color:#3a2067;font-weight:bold;cursor:pointer;">Especial</button>
+                </div>
+                <div id="popupPVTipoDanoBox" style="display:none;flex-direction:column;gap:8px;"></div>
+                <button id="popupPVConfirmarDano" style="margin-top:14px;padding:8px 22px;border-radius:8px;border:none;background:#ff5e62;color:#fff;font-weight:bold;cursor:pointer;">Aplicar Dano</button>
+            `;
+            let especie = null;
+            let tipoSelecionado = null;
+            document.getElementById('popupPVDanoFisico').onclick = () => {
+                especie = 'fisico';
+                mostrarTiposDano();
+            };
+            document.getElementById('popupPVDanoEspecial').onclick = () => {
+                especie = 'especial';
+                mostrarTiposDano();
+            };
+            function mostrarTiposDano() {
+                const tipos = [
+                    { id: 'Corte', label: 'Corte' },
+                    { id: 'Perfuração', label: 'Perfuração' },
+                    { id: 'Impacto', label: 'Impacto' },
+                    { id: 'Retaliação', label: 'Retaliação' },
+                    { id: 'Maligno', label: 'Maligno' },
+                    { id: 'Espiritual', label: 'Espiritual' }
+                ];
+                const box = document.getElementById('popupPVTipoDanoBox');
+                box.style.display = 'flex';
+                box.innerHTML = '<div style="margin-bottom:6px;">Tipo de dano</div>' +
+                    '<div style="display:flex;flex-wrap:wrap;gap:8px 12px;">' +
+                    tipos.map(t => `<button class="popupPVTipoBtn" data-tipo="${t.id}" style="padding:6px 14px;border-radius:7px;border:none;background:#eee;color:#3a2067;font-weight:bold;cursor:pointer;">${t.label}</button>`).join('') +
+                    '</div>';
+                box.querySelectorAll('.popupPVTipoBtn').forEach(btn => {
+                    btn.onclick = function() {
+                        box.querySelectorAll('.popupPVTipoBtn').forEach(b => b.style.background = '#eee');
+                        this.style.background = '#a259ff';
+                        this.style.color = '#fff';
+                        tipoSelecionado = this.getAttribute('data-tipo');
+                    };
+                });
+            }
+            document.getElementById('popupPVConfirmarDano').onclick = function() {
+                const valor = parseInt(document.getElementById('popupPVDanoValor').value);
+                if (!valor || valor < 1) {
+                    alert('Informe o valor do dano recebido.');
+                    return;
+                }
+                aplicarDanoPV(valor, especie, tipoSelecionado);
+                document.getElementById('popupPV').remove();
+            };
+        }
+
+        // Etapa Cura
+        function popupFluxoCura() {
+            const content = document.getElementById('popupPVContent');
+            content.innerHTML = `
+                <div style="margin-bottom:10px;">Cura recebida <span style='color:#3a8dde;font-weight:bold;'>*</span></div>
+                <input id="popupPVCuraValor" type="number" min="1" style="width:80px;padding:6px 8px;border-radius:6px;border:1.5px solid #a259ff;font-size:1.1rem;text-align:center;">
+                <div style="margin-top:12px;">Amplificador (%) <span style='color:#888;font-size:0.95em;'>(opcional)</span></div>
+                <input id="popupPVAmplificador" type="number" min="0" value="0" style="width:80px;padding:6px 8px;border-radius:6px;border:1.5px solid #a259ff;font-size:1.1rem;text-align:center;">
+                <div style="margin-top:12px;display:flex;align-items:center;gap:8px;">
+                    <input id="popupPVExcederCura" type="checkbox" style="width:18px;height:18px;">
+                    <label for="popupPVExcederCura" style="font-size:1.05rem;cursor:pointer;">Exceder cura (permitir PV acima do máximo)</label>
+                </div>
+                <button id="popupPVConfirmarCura" style="margin-top:14px;padding:8px 22px;border-radius:8px;border:none;background:#3a8dde;color:#fff;font-weight:bold;cursor:pointer;">Aplicar Cura</button>
+            `;
+            // Carregar valores salvos (se existirem)
+            if (window._popupPVAmplificador !== undefined) {
+                document.getElementById('popupPVAmplificador').value = window._popupPVAmplificador;
+            }
+            if (window._popupPVExcederCura !== undefined) {
+                document.getElementById('popupPVExcederCura').checked = window._popupPVExcederCura;
+            }
+            document.getElementById('popupPVConfirmarCura').onclick = function() {
+                const valor = parseInt(document.getElementById('popupPVCuraValor').value);
+                let amplificador = parseInt(document.getElementById('popupPVAmplificador').value) || 0;
+                let exceder = document.getElementById('popupPVExcederCura').checked;
+                // Salvar preferências globais
+                window._popupPVAmplificador = amplificador;
+                window._popupPVExcederCura = exceder;
+                if (!valor || valor < 1) {
+                    alert('Informe o valor da cura recebida.');
+                    return;
+                }
+                aplicarCuraPV(valor, amplificador, exceder);
+                document.getElementById('popupPV').remove();
+            };
+        }
+
+        // Lógica de cálculo e aplicação de dano/curar PV
+        function aplicarDanoPV(valor, especie, tipo) {
+            let pvAtual = parseInt(document.getElementById('pvAtual').value) || 0;
+            let dr = 0;
+            if (especie === 'fisico') {
+                // Dano reduzido por defesa
+                const def = calcularEstatFinal('def');
+                dr = Math.floor(def / 50);
+            } else if (especie === 'especial') {
+                const defEsp = calcularEstatFinal('defEsp');
+                dr = Math.floor(defEsp / 75);
+            }
+            let res = 0;
+            if (tipo) {
+                // Mapeamento dos campos de resistência
+                const map = {
+                    'Corte': 'resCorte',
+                    'Perfuração': 'resPerf',
+                    'Impacto': 'resImpacto',
+                    'Retaliação': 'resRetal',
+                    'Maligno': 'resMaligno',
+                    'Espiritual': 'resEspiritual'
+                };
+                const campo = map[tipo];
+                res = parseInt(ficha && ficha[campo]) || 0;
+            }
+            let tenacidade = parseInt(ficha && ficha.tenacidade) || 0;
+            let danoFinal = valor - dr - res;
+            if (danoFinal < 0) danoFinal = 0;
+            if (tenacidade > 0) {
+                danoFinal = Math.floor(danoFinal * (1 - tenacidade / 100));
+            }
+            if (danoFinal < 0) danoFinal = 0;
+            let novoPV = pvAtual - danoFinal;
+            if (novoPV < 0) novoPV = 0;
+            setBarra('pv', novoPV, parseInt(document.getElementById('pvMax').value) || 0);
+            salvarBarra('pv', novoPV, parseInt(document.getElementById('pvMax').value) || 0);
+            mostrarFantasma('pv', '-' + danoFinal);
+        }
+
+        function aplicarCuraPV(valor, amplificador, exceder) {
+            amplificador = amplificador || 0;
+            let pvAtual = parseInt(document.getElementById('pvAtual').value) || 0;
+            let pvMax = parseInt(document.getElementById('pvMax').value) || 0;
+            // Aplica amplificador
+            let curaFinal = valor;
+            if (amplificador > 0) {
+                curaFinal = Math.floor(valor + (valor * amplificador / 100));
+            }
+            let novoPV = pvAtual + curaFinal;
+            if (!exceder && novoPV > pvMax) novoPV = pvMax;
+            // Se exceder, PV pode passar do máximo
+            setBarra('pv', novoPV, pvMax);
+            salvarBarra('pv', novoPV, pvMax);
+            mostrarFantasma('pv', '+' + curaFinal);
+        }
+
+        // Adiciona eventos de auto-salvar e botão de add PV
+        window.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                const btn = document.getElementById('pvAddBtn');
+                if (btn) btn.onclick = criarPopupPV;
+                // PV
+                const pvAtual = document.getElementById('pvAtual');
+                const pvMax = document.getElementById('pvMax');
+                if (pvAtual) pvAtual.addEventListener('input', function() { autoSalvarBarra('pv'); });
+                if (pvMax) pvMax.addEventListener('input', function() { autoSalvarBarra('pv'); });
+                // Mana
+                const manaAtual = document.getElementById('manaAtual');
+                const manaMax = document.getElementById('manaMax');
+                if (manaAtual) manaAtual.addEventListener('input', function() { autoSalvarBarra('mana'); });
+                if (manaMax) manaMax.addEventListener('input', function() { autoSalvarBarra('mana'); });
+                // PD
+                const pdAtual = document.getElementById('pdAtual');
+                const pdMax = document.getElementById('pdMax');
+                if (pdAtual) pdAtual.addEventListener('input', function() { autoSalvarBarra('pd'); });
+                if (pdMax) pdMax.addEventListener('input', function() { autoSalvarBarra('pd'); });
+            }, 100);
+        });
+        function mostrarFantasma(tipo, texto) {
+            const box = document.getElementById(tipo+'Box');
+            let fantasma = document.createElement('div');
+            fantasma.className = 'valor-fantasma';
+            fantasma.textContent = texto;
+            box.appendChild(fantasma);
+            setTimeout(() => {
+                fantasma.remove();
+            }, 1200);
+        }
+        function salvarNivel() {
+            const nivel = parseInt(document.getElementById('nivelInput').value) || 1;
+            const fichas = getFichasUsuario();
+            if (isNaN(idxFicha) || !fichas[idxFicha]) return;
+            fichas[idxFicha].nivel = nivel;
+            setFichasUsuario(fichas);
+        }
+        // --- Informações Lateral ---
+        function toggleInfoBox() {
+            const content = document.getElementById('infoContent');
+            const arrow = document.getElementById('infoArrow');
+            if (content.style.display === 'none' || !content.style.display) {
+                content.style.display = 'block';
+                arrow.style.transform = 'rotate(180deg)';
+            } else {
+                content.style.display = 'none';
+                arrow.style.transform = 'rotate(0deg)';
+            }
+        }
+        function toggleSubInfo(tipo) {
+            const content = document.getElementById(tipo+'Content');
+            const arrow = document.getElementById(tipo+'Arrow');
+            if (content.style.display === 'none' || !content.style.display) {
+                content.style.display = 'block';
+                arrow.style.transform = 'rotate(180deg)';
+                if (tipo === 'atributos') carregarAtributosRapidos();
+                if (tipo === 'estatisticas') carregarEstatisticasRapidas();
+                if (tipo === 'resistencias') carregarResistencias();
+            } else {
+                content.style.display = 'none';
+                arrow.style.transform = 'rotate(0deg)';
+            }
+        }
+        function carregarAtributosRapidos() {
+            if (!ficha) return;
+            const atr = ficha.atributos || { mente: 0, assimilacao: 0, leveza: 0, arcanismo: 0, fisico: 0, engenho: 0 };
+            const nomes = { mente: 'Mente', assimilacao: 'Assimilação', leveza: 'Leveza', arcanismo: 'Arcanismo', fisico: 'Físico', engenho: 'Engenho' };
+            let html = '';
+            for (const k in nomes) {
+                html += `<div><b>${nomes[k]}:</b> ${atr[k] ?? 0}</div>`;
+            }
+            document.getElementById('atributosRapidos').innerHTML = html;
+        }
+
+        // Corrigido: funções estavam aninhadas, agora estão no escopo correto
+        function calcularEstatFinal(key) {
+            // Calcula o valor final da estatística considerando buffs/debuffs/prioridades igual estatisticas.html
+            if (!ficha || !ficha[key]) return 0;
+            let valor = parseInt(ficha[key]?.base) || 0;
+            const buffs = (ficha[key]?.buffs || []).slice();
+            const debuffs = (ficha[key]?.debuffs || []).slice();
+            const prioridades = (ficha[key]?.prioridades || []).slice();
+            // Buffs prioridade
+            let buffsNormais = buffs.filter((_, i) => !prioridades.includes(i));
+            let buffsPrioridade = buffs.filter((_, i) => prioridades.includes(i));
+            buffsPrioridade.sort((a, b) => b - a);
+            buffsNormais.sort((a, b) => b - a);
+            let debuffsNormais = debuffs.filter((_, i) => !prioridades.includes(1000 + i));
+            let debuffsPrioridade = debuffs.filter((_, i) => prioridades.includes(1000 + i));
+            debuffsPrioridade.sort((a, b) => a - b);
+            debuffsNormais.sort((a, b) => a - b);
+            buffsPrioridade.forEach(buff => { valor = Math.floor(valor + valor * (buff / 100)); });
+            buffsNormais.forEach(buff => { valor = Math.floor(valor + valor * (buff / 100)); });
+            debuffsPrioridade.forEach(debuff => { valor = Math.floor(valor - valor * (debuff / 100)); });
+            debuffsNormais.forEach(debuff => { valor = Math.floor(valor - valor * (debuff / 100)); });
+            return valor;
+        }
+
+        function carregarEstatisticasRapidas() {
+            if (!ficha) return;
+            // Os mesmos cálculos de estatisticas.html
+            const atk = calcularEstatFinal('atk');
+            const atkEsp = calcularEstatFinal('atkEsp');
+            const def = calcularEstatFinal('def');
+            const defEsp = calcularEstatFinal('defEsp');
+            const vel = calcularEstatFinal('vel');
+            // Dano reduzido igual estatisticas.html
+            const drDef = Math.floor(def / 50);
+            const drDefEsp = Math.floor(defEsp / 75);
+            // Deslocamento igual estatisticas.html
+            const desloc = (Math.floor(vel / 100) + 6) + '/m';
+            let html = '';
+            html += `<div><b>Ataque:</b> ${atk}</div>`;
+            html += `<div><b>Atk Esp:</b> ${atkEsp}</div>`;
+            html += `<div><b>Defesa:</b> ${def} <span style=\"font-size:0.93em;color:#888;\">Dano reduzido: ${drDef}</span></div>`;
+            html += `<div><b>Def Esp:</b> ${defEsp} <span style=\"font-size:0.93em;color:#888;\">Dano reduzido: ${drDefEsp}</span></div>`;
+            html += `<div><b>Velocidade:</b> ${vel} <span style=\"font-size:0.93em;color:#888;\">Deslocamento: ${desloc}</span></div>`;
+            document.getElementById('estatisticasRapidas').innerHTML = html;
+        }
+        function carregarResistencias() {
+            if (!ficha) return;
+            document.getElementById('tenacidadeInput').value = ficha.tenacidade ?? 0;
+            document.getElementById('resCorte').value = ficha.resCorte ?? '';
+            document.getElementById('resPerf').value = ficha.resPerf ?? '';
+            document.getElementById('resImpacto').value = ficha.resImpacto ?? '';
+            document.getElementById('resRetal').value = ficha.resRetal ?? '';
+            document.getElementById('resMaligno').value = ficha.resMaligno ?? '';
+            document.getElementById('resEspiritual').value = ficha.resEspiritual ?? '';
+        }
+        // Salvar resistências ao editar
+        window.addEventListener('DOMContentLoaded', function() {
+            ['tenacidadeInput','resCorte','resPerf','resImpacto','resRetal','resMaligno','resEspiritual'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.addEventListener('input', function() {
+                    if (!ficha) return;
+                    if (id === 'tenacidadeInput') {
+                        ficha.tenacidade = Math.max(0, Math.min(100, parseInt(el.value)||0));
+                    } else {
+                        ficha[id] = el.value;
+                    }
+                    const fichas = getFichasUsuario();
+                    if (isNaN(idxFicha) || !fichas[idxFicha]) return;
+                    fichas[idxFicha] = ficha;
+                    setFichasUsuario(fichas);
+                });
+            });
+        });
+        window.onload = function() {
+            if (!getUsuarioLogado()) {
+                window.location.href = '../Registro/login.html';
+                return;
+            }
+            mostrarBarras();
+        }
+    </script>
+</body>
+</html>
